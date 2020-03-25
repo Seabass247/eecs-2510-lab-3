@@ -91,7 +91,6 @@ void AVL::insert(string X)
 	// If we end up here, we took neither of the two returns just above, and the tree 
 	// is now UNACCEPTABLY IMBALANCED.
 
-	// TODO: implement steps 6-8.
 	if (d == +1) // this is a left imbalance (left subtree too tall).  
 		   // Is it LL or LR?
 	{
@@ -105,8 +104,30 @@ void AVL::insert(string X)
 		}
 		else  // LR Rotation: three cases (structurally the same; BFs vary)
 		{
-		}
-	}
+			// Adjust the child pointers of nodes A, B, & C to reflect
+			// the new post-rotation structure
+			C = B->RCH; // C is B's right child
+			CL = C->LCH; // CL and CR are C's left and right children
+			CR = C->RCH; // See Schematic (2) and (3) 
+			
+			C->LCH = B; // B becomes C's left child
+			C->RCH = A; // A becomes C's right child
+			B->RCH = CL; // B's right child becomes C's original left child
+			A->LCH = CR; // A's left child becomes C's original right child
+
+			switch (C->BF)
+			{
+				// Set the new BF’s at A and B, based on the BF at C.
+				case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
+				case 1: B->BF = C->BF = 0; A->BF = -1; break; // B & C's BFs go to 0. A's goes to -1
+				case -1: A->BF = C->BF = 0; B->BF = 1; break; // A & C's BFs go to 0. B's goes to 1
+			}
+
+			C->BF = 0; // Regardless, C is now balanced
+			B = C;     // B is the root of the now-rebalanced subtree (recycle)
+		} // end of else (LR Rotation)
+	} // end of “if (d = +1)”
+
 
 
 
