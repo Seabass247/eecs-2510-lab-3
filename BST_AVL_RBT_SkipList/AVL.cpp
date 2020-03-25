@@ -92,4 +92,22 @@ void AVL::insert(string X)
 	// is now UNACCEPTABLY IMBALANCED.
 
 	// TODO: implement steps 6-8.
+	if (d == +1) // this is a left imbalance (left subtree too tall).  
+		   // Is it LL or LR?
+	{
+		if (B->BF == +1) // LL rotation
+		{
+			// Change the child pointers at A and B to reflect the rotation
+			// Adjust the BFs at A & B
+			B->RCH = A;
+			A->LCH = NULL;
+			F->LCH = B;
+		}
+		else  // LR Rotation: three cases (structurally the same; BFs vary)
+		{
+		}
+	}
+
+
+
 }
