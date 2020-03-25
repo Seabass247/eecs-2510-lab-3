@@ -1,4 +1,7 @@
 #include "AVL.h"
+#include <iostream>
+
+using namespace std;
 
 void AVL::insert(string X)
 {
@@ -127,6 +130,56 @@ void AVL::insert(string X)
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
 		} // end of else (LR Rotation)
 	} // end of “if (d = +1)”
+	else // d=-1.  This is a right imbalance. Is it RR or RL?
+	{
+		if (B->BF == -1) // RR rotation
+		{
+			// Change the child pointers at A and B to reflect the rotation
+			// Adjust the BFs at A & B
+			B->LCH = A;
+			A->RCH = NULL;
+			F->RCH = B;
+		}
+		else // RL Rotation: three cases (structurally the same; BFs vary)
+		{
+			// Adjust the child pointers of nodes A, B, & C to reflect
+			// the new post-rotation structure
+			C = B->LCH; // C is B's left child
+			CL = C->LCH; // CL and CR are C's left and right children
+			CR = C->RCH; //
+
+			C->RCH = B; // B becomes C's right child
+			C->LCH = A; // A becomes C's left child
+			B->LCH = CR; // B's left child becomes C's original right child
+			A->RCH = CL; // A's right child becomes C's original left child
+
+			switch (C->BF)
+			{
+				// Set the new BF’s at A and B, based on the BF at C.
+			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
+			case -1: B->BF = C->BF = 0; A->BF = 1; break; // B & C's BFs go to 0. A's goes to 1
+			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to -1
+			}
+
+			C->BF = 0; // Regardless, C is now balanced
+			B = C;     // B is the root of the now-rebalanced subtree (recycle)
+		} // end of else (RL Rotation)
+		
+		// Regardless, the subtree rooted at B has been rebalanced, and needs to
+		// be the new child of F.  The original subtree of F had root A.
+
+		// did we rebalance the whole tree’s root?
+		if (F == NULL) { root = B; return; } // B is the tree’s new root - done
+
+		// The root of what we rebalanced WAS A; now it’s B.  If the subtree we
+		// rebalanced was LEFT of F, then B needs to be left of F;
+		// if A was RIGHT of F, then B now needs to be right of F.
+		//
+		if (A == F->LCH) { F->LCH = B; return; }
+		if (A == F->RCH) { F->RCH = B; return; }
+		cout << "We should never be here\n";
+
+	}
 
 
 
