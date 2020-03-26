@@ -3,13 +3,48 @@
 
 using namespace std;
 
-void AVL::insert(string X)
+AVL::AVL()
 {
-	node* Y;            // The new node we insert (z in the previous code)
+	root = NULL;
+}
+
+// A helper function which returns the node associated with the key word, 
+// and if no node is found, or the tree is empty, returns NULL.
+AVL::node* AVL::find(const char* X)
+{
+	node* currentNode = root;
+	// Follow the left and right child pointers depending on whether
+	// the current word is greater than or less than <word>.
+	while (currentNode != NULL)
+	{
+		// If the current node's key is equal to <word>, we've found
+		// the node we're looking for, return it.
+		if (strcmp(currentNode->data, X) == 0)
+		{
+			return currentNode;
+		}
+		// If the word we're looking for is less than that of the key
+		// we're at, go left.
+		if (strcmp(X, currentNode->data) < 0)
+		{
+			currentNode = currentNode->LCH;
+		}
+		// Otherwise it's greater, go right.
+		else
+		{
+			currentNode = currentNode->RCH;
+		}
+	}
+	return NULL;
+}
+
+void AVL::Insert(const char* X)
+{
+	node* Y; // The new node we insert (z in the previous code)
 	node* A, * B; // A will be the last parent above Y with a BF of ±1 (before the insert)
 	node* F; // F is A’s parent (F lags one step behind A)
 	node* P; // P will be used to scan through the tree until it falls off bottom. 
-	node *Q; // Q lags behind P, so it will be the parent of Y when P falls off.
+	node* Q; // Q lags behind P, so it will be the parent of Y when P falls off.
 	node* C, * CL, * CR;
 	int  d;             // displacement; Used to adjust BFs
 
@@ -21,6 +56,16 @@ void AVL::insert(string X)
 		Y->BF = 0;     // it is, by definition, balanced
 		root = Y;        // root was NULL, so Y is new root
 		return;          // This was the trivial case
+	}
+
+	// If the node we're inserting is already in the tree, just add 1 to its count
+	// and exit
+	node* findNode;
+	if ((findNode = find(X)) != NULL) // If there's a node in the tree that matches key X
+		// Node found. Increment the count and exit. We're done here.
+	{
+		findNode->count++;
+		return; // This is all that needs done for this case
 	}
 
 	//
@@ -37,7 +82,7 @@ void AVL::insert(string X)
 			A = P; F = Q;
 		}  // a non-zero BF (and its parent)
 		Q = P;                               // Bring Q up to where P is
-		P = (X < P->data) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
+		P = (strcmp(X, P->data) < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
 	}
 
 	//
@@ -52,7 +97,7 @@ void AVL::insert(string X)
 
 
 	// Will Y be Q's new left or right child?
-	if (X < Q->data) Q->LCH = Y;
+	if (strcmp(X, Q->data) < 0) Q->LCH = Y;
 	else Q->RCH = Y;
 
 	//
@@ -66,12 +111,12 @@ void AVL::insert(string X)
 	// If X is inserted in the LEFT subtree of A, then d = +1 (d = -1 means
 	// we inserted X in the RIGHT subtree of A.
 
-	if (X > A->data) { B = P = A->RCH; d = -1; } // Which way is the displacement (d)
+	if (strcmp(X, A->data) > 0) { B = P = A->RCH; d = -1; } // Which way is the displacement (d)
 	else { B = P = A->LCH; d = +1; } // B is identified as A’s child
 
 	while (P != Y)  // P is now one node below A.  Adjust from here to the
 	{               // insertion point.  Don’t do anything to new node (Y)
-		if (X > P->data) { P->BF = -1; P = P->RCH; } // adjust BF and move forward
+		if (strcmp(X, P->data) > 0) { P->BF = -1; P = P->RCH; } // adjust BF and move forward
 		else { P->BF = +1; P = P->LCH; }
 	}
 
@@ -101,9 +146,10 @@ void AVL::insert(string X)
 		{
 			// Change the child pointers at A and B to reflect the rotation
 			// Adjust the BFs at A & B
-			B->RCH = A;
-			A->LCH = NULL;
-			F->LCH = B;
+			A->LCH = B->RCH; // A's left child now points to B's right
+			B->RCH = A; // B's right child now points to A.
+			A->BF = 0;
+			B->BF = 0;
 		}
 		else  // LR Rotation: three cases (structurally the same; BFs vary)
 		{
@@ -111,19 +157,19 @@ void AVL::insert(string X)
 			// the new post-rotation structure
 			C = B->RCH; // C is B's right child
 			CL = C->LCH; // CL and CR are C's left and right children
-			CR = C->RCH; // See Schematic (2) and (3) 
-			
-			C->LCH = B; // B becomes C's left child
-			C->RCH = A; // A becomes C's right child
+			CR = C->RCH;
+
 			B->RCH = CL; // B's right child becomes C's original left child
 			A->LCH = CR; // A's left child becomes C's original right child
+			C->LCH = B; // C's left child becomes B
+			C->RCH = A; // C's right child becomes A
 
+			// Set the new BF’s at A and B, based on the BF at C.
 			switch (C->BF)
 			{
-				// Set the new BF’s at A and B, based on the BF at C.
-				case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
-				case 1: B->BF = C->BF = 0; A->BF = -1; break; // B & C's BFs go to 0. A's goes to -1
-				case -1: A->BF = C->BF = 0; B->BF = 1; break; // A & C's BFs go to 0. B's goes to 1
+			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
+			case 1: B->BF = C->BF = 0; A->BF = -1; break; // B & C's BFs go to 0. A's goes to -1
+			case -1: A->BF = C->BF = 0; B->BF = 1; break; // A & C's BFs go to 0. B's goes to 1
 			}
 
 			C->BF = 0; // Regardless, C is now balanced
@@ -136,52 +182,69 @@ void AVL::insert(string X)
 		{
 			// Change the child pointers at A and B to reflect the rotation
 			// Adjust the BFs at A & B
-			B->LCH = A;
-			A->RCH = NULL;
-			F->RCH = B;
+			A->RCH = B->LCH; // A's right child now points to B's left
+			B->LCH = A; // B's left child now points to A.
+			A->BF = 0;
+			B->BF = 0;
 		}
-		else // RL Rotation: three cases (structurally the same; BFs vary)
+		else  // RL Rotation: three cases (structurally the same; BFs vary)
 		{
 			// Adjust the child pointers of nodes A, B, & C to reflect
 			// the new post-rotation structure
 			C = B->LCH; // C is B's left child
-			CL = C->LCH; // CL and CR are C's left and right children
-			CR = C->RCH; //
+			CL = C->LCH; // CL and CR are C's right and left children
+			CR = C->RCH; 
 
-			C->RCH = B; // B becomes C's right child
-			C->LCH = A; // A becomes C's left child
 			B->LCH = CR; // B's left child becomes C's original right child
 			A->RCH = CL; // A's right child becomes C's original left child
+			C->RCH = B; // C's right child becomes B
+			C->LCH = A; // C's left child becomes A
 
+			// Set the new BF’s at A and B, based on the BF at C.
 			switch (C->BF)
 			{
-				// Set the new BF’s at A and B, based on the BF at C.
 			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
-			case -1: B->BF = C->BF = 0; A->BF = 1; break; // B & C's BFs go to 0. A's goes to 1
-			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to -1
+			case -1: B->BF = C->BF = 0; A->BF = 1; break; // B & C's BFs go to 0. A's goes to -1
+			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to 1
 			}
 
 			C->BF = 0; // Regardless, C is now balanced
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
 		} // end of else (RL Rotation)
-		
-		// Regardless, the subtree rooted at B has been rebalanced, and needs to
-		// be the new child of F.  The original subtree of F had root A.
+	} // end of "if (d = -1)"
 
-		// did we rebalance the whole tree’s root?
-		if (F == NULL) { root = B; return; } // B is the tree’s new root - done
+	// Regardless, the subtree rooted at B has been rebalanced, and needs to
+	// be the new child of F.  The original subtree of F had root A.
+	// did we rebalance the whole tree’s root?
+	if (F == NULL) { root = B; return; } // B is the tree’s new root - done
 
-		// The root of what we rebalanced WAS A; now it’s B.  If the subtree we
-		// rebalanced was LEFT of F, then B needs to be left of F;
-		// if A was RIGHT of F, then B now needs to be right of F.
-		//
-		if (A == F->LCH) { F->LCH = B; return; }
-		if (A == F->RCH) { F->RCH = B; return; }
-		cout << "We should never be here\n";
+	// The root of what we rebalanced WAS A; now it’s B.  If the subtree we
+	// rebalanced was LEFT of F, then B needs to be left of F;
+	// if A was RIGHT of F, then B now needs to be right of F.
+	//
+	if (A == F->LCH) { F->LCH = B; return; }
+	if (A == F->RCH) { F->RCH = B; return; }
+	cout << "We should never be here\n";
+}
 
-	}
+// Outputs all the nodes in the AVL tree, their count, key, and balance factor (BF) in comma separated
+// values.
+void AVL::list()
+{
+	cout << "AVL tree contains: ";
+	traverse(root);
+	cout << endl;
+}
 
-
-
-
+// A recursive in-order traversal (processes left subtree, then root, then right subtree)
+void AVL::traverse(node* p)
+{
+	// If p has a left child, traverse the left subtree.
+	if (p->LCH != NULL)
+		traverse(p->LCH);
+	// process the root of the subtree
+	cout << p->count << " \'" << p->data << "\'" << " BF=" << p->BF << ",";
+	// If p has a right child, traverse the right subtree.
+	if (p->RCH != NULL)
+		traverse(p->RCH);
 }

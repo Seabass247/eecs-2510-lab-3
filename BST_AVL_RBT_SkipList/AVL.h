@@ -7,15 +7,14 @@ class AVL
 {
 public:
 	AVL();
-	~AVL();
 
-	void insert(string word);
+	void Insert(const char* word);
 	void list();
 
 private:
 	struct node
 	{
-		string data;
+		const char* data;
 		int count = 1;
 		int BF = 0;
 		node* LCH = NULL;
@@ -23,8 +22,6 @@ private:
 	};
 
 	node* root = NULL;
-
-	node* find(string word);
-	void traverse(node* p, string& list);
-	void traverseDelete(node* p);
+	node* find(const char* word);
+	void traverse(node* p);
 };
