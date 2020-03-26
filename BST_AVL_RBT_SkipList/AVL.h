@@ -9,8 +9,8 @@ public:
 	AVL();
 
 	void Insert(const char* word);
-	void list();
-
+	void List();
+	void Height();
 private:
 	struct node
 	{
@@ -24,4 +24,5 @@ private:
 	node* root = NULL;
 	node* find(const char* word);
 	void traverse(node* p);
+	int traverse_height(node* p);
 };

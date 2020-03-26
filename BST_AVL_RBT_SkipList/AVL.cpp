@@ -38,6 +38,11 @@ AVL::node* AVL::find(const char* X)
 	return NULL;
 }
 
+// Inserts a new value into the AVL Tree. If the value is already in the tree,
+// increment the count of the appropriate node by 1 and return.  Otherwise,
+// initialize a new node, find an appropriate place to insert it based on the 
+// value of its key, then check for any imbalances and rerrange the offending
+// subtrees to decrease any balance factors of magnitude 2.
 void AVL::Insert(const char* X)
 {
 	node* Y; // The new node we insert (z in the previous code)
@@ -229,10 +234,11 @@ void AVL::Insert(const char* X)
 
 // Outputs all the nodes in the AVL tree, their count, key, and balance factor (BF) in comma separated
 // values.
-void AVL::list()
+void AVL::List()
 {
 	cout << "AVL tree contains: ";
-	traverse(root);
+	if (root != NULL)
+		traverse(root);
 	cout << endl;
 }
 
@@ -247,4 +253,33 @@ void AVL::traverse(node* p)
 	// If p has a right child, traverse the right subtree.
 	if (p->RCH != NULL)
 		traverse(p->RCH);
+}
+
+// Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
+// a one-node tree.
+void AVL::Height()
+{
+	int count = 0;
+	if (root != NULL) // If the tree isn't empty, get its the height
+		count = traverse_height(root);
+	cout << "AVL tree height= " << count << endl;
+}
+
+// Recursively traverse through the tree, comparing the height of the left subtree against
+// the right subtree height, return the larger of the two heights.
+int AVL::traverse_height(node* p)
+{
+	int leftSubtreeHeight = 0;
+	int rightSubtreeHeight = 0;
+	if (p->LCH != NULL) // If left subtree exists, traverse it and get the largest height of the subtree
+		leftSubtreeHeight = traverse_height(p->LCH);
+	if (p->RCH != NULL) // If right subtree exists, traverse it and get the largest height of the subtree
+	{
+		rightSubtreeHeight = traverse_height(p->RCH);
+	}
+	// Return the larger of the two subtree's heights.
+	if (leftSubtreeHeight > rightSubtreeHeight)
+		return(leftSubtreeHeight + 1);
+	else 
+		return(rightSubtreeHeight + 1);
 }
