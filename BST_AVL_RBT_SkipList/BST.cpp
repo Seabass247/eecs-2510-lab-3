@@ -32,20 +32,19 @@ BST::~BST()
 // node in the tree, from leaves to root.
 void BST::traverseDelete(node* p)
 {
-	if (p->left != NULL)
-		traverseDelete(p->left);
-	if (p->right != NULL)
-		traverseDelete(p->right);
+	if (p->LCH != NULL)
+		traverseDelete(p->LCH);
+	if (p->RCH != NULL)
+		traverseDelete(p->RCH);
 	delete p;
 }
-
 
 // Inserts a new value into the BST. If the value is already in the tree,
 // increment the count of the appropriate node by 1.  Otherwise initialize
 // a new empty node (the new node to be inserted is referred to as z here), 
 // set its key to <word>. Make z either the root or child of a node which does
 // not have at least one child.
-void BST::insert(string word)
+void BST::Insert(const char* word)
 {
 	// Node x is the root node and possibly any descendent that has
 	// a key matching the word we're inserting.
@@ -67,20 +66,19 @@ void BST::insert(string word)
 		// If the current node's key equals the word of the value we're
 		// trying to insert, just increment the count of the word and
 		// exit this function.
-		if (x->word == word) {
-			// Output the nodes word and its count. 
-			cout << word << " " << ++x->count << "\n";
+		if (strcmp(x->word, word) == 0) {
+			x->count++;
 			return;
 		}
 		// Move left or right in the tree depending on if the value we're trying
 		// to insert is greater (go right) or less than (go left) the value we're at.
-		if (word < x->word)
+		if (strcmp(word, x->word) < 0)
 		{
-			x = x->left;
+			x = x->LCH;
 		}
 		else
 		{
-			x = x->right;
+			x = x->RCH;
 		}
 	}
 	// The loop has exited. x was null, thus we followed a NULL pointer, and y is the leaf.
@@ -100,99 +98,16 @@ void BST::insert(string word)
 	// Otherwise, the tree has at least one node y in it. Make new node z a child of y, 
 	// which implies setting z's parent to y as well. 
 	// Make z the left child if its word is less than its parents word.
-	else if (word < y->word)
+	else if (strcmp(word, y->word) < 0)
 	{
 		z->parent = y;
-		y->left = z;
+		y->LCH = z;
 	}
 	// Otherwise it's greater and should be the right child.
 	else {
 		z->parent = y;
-		y->right = z;
+		y->RCH = z;
 	}
-	// Output the newly inserted node's word and its count.
-	cout << word << " " << z->count << "\n";
-}
-
-
-// A helper function that returns the node of the minimum value
-// under node p.
-BST::node* BST::minimum(node* p)
-{
-	// Keep following a left pointer down the tree if it is not NULL. 
-	while (p->left != NULL)
-	{
-		p = p->left;
-	}
-	// We followed a null left pointer, therefore node p is the minimum.
-	return p;
-}
-
-// A helper function that returns the node of the maximum value
-// under node p.
-BST::node* BST::maximum(node* p)
-{
-	// Keep following a right pointer down the tree if it is not NULL. 
-	while (p->right != NULL)
-	{
-		p = p->right;
-	}
-	// We followed a null right pointer, therefore node p is the maximum.
-	return p;
-}
-
-// A helper function the returns the node of the successor to node p.
-// The successor is either the minimum of the right child of p if p
-// has a right child, otherwise the successor is somewhere higher in
-// the tree, where it is found by following the parent, grandparent, etc..
-// of p until we followed a left link.
-BST::node* BST::successor(node* p)
-{
-	// If p has a right child, the successor is the minimum of the right
-	// child's tree.
-	if (p->right != NULL)
-	{
-		return minimum(p->right);
-	}
-	// y is an ancestor of p, where p is in y's right subtree.
-	node* y = p->parent;
-	// Keep going up the tree until we followed a left link.
-	while (y != NULL && p == y->right)
-	{
-		// p lags behind y.
-		p = y;
-		// go up in the tree.
-		y = y->parent;
-	}
-	// We must have followed a left link and y is therefore the successor, or y is NULL.
-	return y;
-}
-
-// A helper function the returns the node of the predecessor to node p.
-// The predecessor is either the maximum of the left child of p if p
-// has a left child, otherwise the predecessor is somewhere higher in
-// the tree, where it is found by following the parent, grandparent, etc..
-// of p until we followed a right link.
-BST::node* BST::predecessor(node* p)
-{
-	// If p has a left child, the predecessor is the maximum of the left
-	// child's tree.
-	if (p->left != NULL)
-	{
-		return maximum(p->left);
-	}
-	// y is an ancestor of p, where p is in y's left subtree.
-	node* y = p->parent;
-	// Keep going up the tree until we followed a right link.
-	while (y != NULL && p == y->left)
-	{
-		// p lags behind y.
-		p = y;
-		// go up in the tree.
-		y = y->parent;
-	}
-	// We must have followed a right link and y is therefore the successor, or y is NULL.
-	return y;
 }
 
 // Does a in-order traversal through the tree, listing all of the string in the tree in 
@@ -200,7 +115,7 @@ BST::node* BST::predecessor(node* p)
 // total number of elements in the tree in the form of a label, which appears as 
 // '(n) ' followed by string key and its count and a comma to separate it from the
 // next element.
-void BST::list()
+void BST::List()
 {
 	// Output and nicely format the list only if the tree is not empty.  
 	if (root != NULL)
@@ -262,13 +177,13 @@ void BST::list()
 void BST::traverse(node* p, string& list)
 {
 	// If p has a left child, traverse the left subtree.
-	if (p->left != NULL)
-		traverse(p->left, list);
+	if (p->LCH != NULL)
+		traverse(p->LCH, list);
 	// Append '<word> <count>,' to the list string.
 	list = list + p->word + " " + to_string(p->count) + ",";
 	// If p has a right child, traverse the right subtree.
-	if (p->right != NULL)
-		traverse(p->right, list);
+	if (p->RCH != NULL)
+		traverse(p->RCH, list);
 }
 
 // A helper function which returns the node associated with the key word, 
@@ -291,77 +206,42 @@ BST::node* BST::find(string word)
 		// we're at, go left.
 		if (word < currentNode->word)
 		{
-			currentNode = currentNode->left;
+			currentNode = currentNode->LCH;
 		}
 		// Otherwise it's greater, go right.
 		else
 		{
-			currentNode = currentNode->right;
+			currentNode = currentNode->RCH;
 		}
 	}
 	return NULL;
 }
 
-// Output the strings of the keys contained in the left and right
-// child nodes of the node containing string word.  If said node
-// is not in the treem output a blank line.
-void BST::child(string word)
+// Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
+// a one-node tree.
+void BST::Height()
 {
-	node* p;
-	if ((p = find(word)) != NULL)
-	{
-		// Declare left and right as the pointers to the left
-		// child and right child for convenience.
-		node* left = p->left;
-		node* right = p->right;
-
-		// By default, the words are "NULL" unless there is an
-		// actual string key to override it.
-		string leftWord = "NULL";
-		string rightWord = "NULL";
-
-		// If there is a left child, override "NULL" to its key.
-		if (left != NULL)
-		{
-			leftWord = left->word;
-		}
-		// If there is a right child, override "NULL" to its key.
-		if (right != NULL)
-		{
-			rightWord = right->word;
-		}
-
-		// Output the string of the left child's key and the right child's key.
-		cout << leftWord << ", " << rightWord << "\n";
-
-	}
-	// There is no node associated with string word in the tree.
-	else
-	{
-		// Output a blank line.
-		cout << "\n";
-	}
+	int count = 0;
+	if (root != NULL) // If the tree isn't empty, get its the height
+		count = traverse_height(root);
+	cout << "AVL tree height= " << count << endl;
 }
 
-// Outputs the parent of the node associated by string word. If said node
-// is not in the tree, output a blank line.  Otherwise, if the pointer to 
-// the parent is not NULL, p has a parent (here is it referred to as 
-// pParent), so output the parent's key.
-void BST::parent(string word)
+// Recursively traverse through the tree, comparing the height of the left subtree against
+// the right subtree height, return the larger of the two heights.
+int BST::traverse_height(node* p)
 {
-	node* p;
-	node* pParent;
-
-	// If the node is in the tree and thus if its parent exists, output the parents key.
-	if ((p = find(word)) != NULL && (pParent = p->parent) != NULL)
+	int leftSubtreeHeight = 0;
+	int rightSubtreeHeight = 0;
+	if (p->LCH != NULL) // If left subtree exists, traverse it and get the largest height of the subtree
+		leftSubtreeHeight = traverse_height(p->LCH);
+	if (p->RCH != NULL) // If right subtree exists, traverse it and get the largest height of the subtree
 	{
-		cout << pParent->word << "\n";
+		rightSubtreeHeight = traverse_height(p->RCH);
 	}
-	// Either node is not in the tree or it is, but its parent is NULL, either way output
-	// a blank line.
+	// Return the larger of the two subtree's heights.
+	if (leftSubtreeHeight > rightSubtreeHeight)
+		return(leftSubtreeHeight + 1);
 	else
-	{
-		// Output a blank line.
-		cout << "\n";
-	}
+		return(rightSubtreeHeight + 1);
 }

@@ -9,28 +9,23 @@ public:
 	BST();
 	~BST();
 
-	void insert(string word);
-	void parent(string word);
-	void child(string word);
-	void list();
-
+	void Insert(const char* word);
+	void List();
+	void Height();
 private:
 	struct node
 	{
-		string word;
+		const char* word;
 		int count = 1;
-		node* left = NULL;
-		node* right = NULL;
+		node* LCH = NULL;
+		node* RCH = NULL;
 		node* parent = NULL;
 	};
 
 	node* root = NULL;
 
-	node* minimum(node* p);
-	node* maximum(node* p);
-	node* successor(node* p);
-	node* predecessor(node* p);
 	node* find(string word);
 	void traverse(node* p, string& list);
 	void traverseDelete(node* p);
+	int traverse_height(node* p);
 };
