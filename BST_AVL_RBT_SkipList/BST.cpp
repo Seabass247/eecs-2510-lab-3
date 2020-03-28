@@ -63,16 +63,18 @@ void BST::Insert(const char* word)
 		// has exited, y refers to the very last valid node.
 		y = x;
 
+		statKeyComparison++;
+		int comparisonValue = strcmp(word, x->word);
 		// If the current node's key equals the word of the value we're
 		// trying to insert, just increment the count of the word and
 		// exit this function.
-		if (strcmp(x->word, word) == 0) {
+		if (comparisonValue == 0) {
 			x->count++;
 			return;
 		}
 		// Move left or right in the tree depending on if the value we're trying
 		// to insert is greater (go right) or less than (go left) the value we're at.
-		if (strcmp(word, x->word) < 0)
+		if (comparisonValue < 0)
 		{
 			x = x->LCH;
 		}
@@ -100,12 +102,14 @@ void BST::Insert(const char* word)
 	// Make z the left child if its word is less than its parents word.
 	else if (strcmp(word, y->word) < 0)
 	{
-		z->parent = y;
+		statKeyComparison++;
+		statPointerChange++;
 		y->LCH = z;
 	}
 	// Otherwise it's greater and should be the right child.
 	else {
-		z->parent = y;
+		statKeyComparison++;
+		statPointerChange++;
 		y->RCH = z;
 	}
 }
@@ -129,7 +133,7 @@ void BST::List()
 
 		// Populate the list string with a list of comma-separated values of items and their
 		// respective counts.
-		traverse(root, list);
+		traverse_list(root, list);
 
 		// Parse the comma-separated string list of values into a readable print format,
 		// where each item and its count are numbered from 0 to n items in the tree.
@@ -173,58 +177,58 @@ void BST::List()
 }
 
 // A recursive in-order traversal (processes left subtree, then root, then right subtree),
-// appending comma-separated values to the list string parameter.
-void BST::traverse(node* p, string& list)
+// while adding 1 to the node count for every node
+void BST::traverse(node* p, int& distinctCount, int& totalCount)
 {
 	// If p has a left child, traverse the left subtree.
 	if (p->LCH != NULL)
-		traverse(p->LCH, list);
+		traverse(p->LCH, distinctCount, totalCount);
+	// Update the counts.
+	distinctCount++;
+	totalCount += p->count;
+	// If p has a right child, traverse the right subtree.
+	if (p->RCH != NULL)
+		traverse(p->RCH, distinctCount, totalCount);
+}
+
+// A recursive in-order traversal (processes left subtree, then root, then right subtree),
+// appending comma-separated values to the list string parameter.
+void BST::traverse_list(node* p, string& list)
+{
+	// If p has a left child, traverse the left subtree.
+	if (p->LCH != NULL)
+		traverse_list(p->LCH, list);
 	// Append '<word> <count>,' to the list string.
 	list = list + p->word + " " + to_string(p->count) + ",";
 	// If p has a right child, traverse the right subtree.
 	if (p->RCH != NULL)
-		traverse(p->RCH, list);
+		traverse_list(p->RCH, list);
 }
 
-// A helper function which returns the node associated with the key word, 
-// and if no node is found, or the tree is empty, returns NULL.
-BST::node* BST::find(string word)
-{
-	//
-	node* currentNode = root;
-	// Follow the left and right child pointers depending on whether
-	// the current word is greater than or less than <word>.
-	while (currentNode != NULL)
-	{
-		// If the current node's key is equal to <word>, we've found
-		// the node we're looking for, return it.
-		if (currentNode->word == word)
-		{
-			return currentNode;
-		}
-		// If the word we're looking for is less than that of the key
-		// we're at, go left.
-		if (word < currentNode->word)
-		{
-			currentNode = currentNode->LCH;
-		}
-		// Otherwise it's greater, go right.
-		else
-		{
-			currentNode = currentNode->RCH;
-		}
-	}
-	return NULL;
-}
-
-// Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
+// Returns the height of the tree. Here the height is 0 for an empty tree, and 1 for
 // a one-node tree.
-void BST::Height()
+int BST::TreeHeight()
 {
 	int count = 0;
 	if (root != NULL) // If the tree isn't empty, get its the height
 		count = traverse_height(root);
-	cout << "AVL tree height= " << count << endl;
+	return count;
+}
+
+void BST::DisplayStatistics()
+{
+	int height = TreeHeight();
+	int distinctNodes = 0;
+	int totalNodes = 0;
+	if (root != NULL)
+		traverse(root, distinctNodes, totalNodes);
+
+	cout << "BST_distinct_items=" << distinctNodes << endl;
+	cout << "BST_total_items=" << totalNodes << endl;
+	cout << "BST_height=" << height << endl;
+	cout << "BST_key_comparisons=" << statKeyComparison << endl;
+	cout << "BST_child_pointer_changes=" << statPointerChange << endl;
+	
 }
 
 // Recursively traverse through the tree, comparing the height of the left subtree against

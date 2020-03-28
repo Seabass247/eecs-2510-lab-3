@@ -14,15 +14,22 @@ int main()
 	AVL_T->Insert("E");
 	AVL_T->List();
 	AVL_T->Height();
+	*/
 	BST* BST_T = new BST();
 	BST_T->Insert("A");
 	BST_T->Insert("B");
 	BST_T->Insert("C");
+	BST_T->Insert("C");
+	BST_T->Insert("C");
+	BST_T->Insert("C");
+	BST_T->Insert("C");
+	BST_T->Insert("C");
+	BST_T->Insert("C");
 	BST_T->Insert("D");
 	BST_T->Insert("E");
 	BST_T->List();
-	BST_T->Height();
-	*/
+	BST_T->DisplayStatistics();
+	
 
 	/*
 	RBT* RBT_T = new RBT();
@@ -36,7 +43,7 @@ int main()
 	RBT_T->List();
 	RBT_T->Height();
 	*/
-
+	/*
 	SkipList* SL = new SkipList();
 	SL->Insert("A");
 	SL->Insert("A");
@@ -67,4 +74,5 @@ int main()
 	SL->Insert("V");
 	SL->List();
 	SL->Height();
+	*/
 }
