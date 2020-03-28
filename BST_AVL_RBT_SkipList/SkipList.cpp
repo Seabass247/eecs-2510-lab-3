@@ -9,9 +9,9 @@ using namespace std;
 SkipList::SkipList()
 {
 	head = new SkipListNode(); // create the negative infinity sentinel node
-	head->key = NEG_INF; // set its identity to sentinel
+	head->key = NEG_INF;
 	tail = new SkipListNode(); // create the positive infinity sentinel node
-	tail->key = POS_INF; // set its identify it to sentinel
+	tail->key = POS_INF;
 	head->right = tail; // link them to...
 	tail->left = head; // ... each other
 	n = 0; // no entries yet (empty list)
@@ -23,6 +23,7 @@ void SkipList::Insert(const char* X)
 {
 	bool found = false;
 	SkipListNode* p = search(X, found);
+	
 	if (found) // The node is already in the tree, increment its count
 	{
 		p->count++;
@@ -39,77 +40,70 @@ void SkipList::Insert(const char* X)
 	p->right = Y;
 	q->left = Y;
 
-	SkipListNode* lastInserted = Y;
-	int level = 0;
+	int level = 1;
 	while (rand() & 1) // Approximately half the time, create a node in the level above
 	{
-		SkipListNode* Z = lastInserted; // Create Y's respective next-level node, Z.
-
-		while (p->up != NULL)
+		if (level >= h)
 		{
-			if (Z->up != NULL) // Does this node have a node above it?
-			{
-				p = Z->up;
-				break;
-			}
-			Z = Z->left;
-		} // Now p will either be in the level above Y/Z or a sentinel node.
-
-		
-		Z = new SkipListNode(); // Reinitialize Z as to not modify Y.
-
-		if ((strcmp(p->key,NEG_INF) == 0) && h != 0) // Is p sentinel (there's NOT a next level above p)
-		{
-			// Add a new level and insert X in it
+			// Create a new top level
+			// Create the new level's head and tail nodes, link them together 
 			SkipListNode* pNew = new SkipListNode();
 			pNew->key = NEG_INF;
 			SkipListNode* qNew = new SkipListNode();
 			qNew->key = POS_INF;
+			pNew->right = qNew; // link them...
+			qNew->left = pNew; // ...together
 
-			pNew->down = head; head->up = pNew; // Node linkage for new level...
-			qNew->down = tail; tail->up = qNew;
-			pNew->right = qNew; qNew->left = pNew;
-			head = pNew; tail = qNew; // ...
-			h++; // List is now one level taller
-			level++; // TODO REMOVE
-			// Splice Z in between p and q 
-			Z->left = pNew; // Adjust pointers to splice in the new node.
-			Z->right = qNew;
-			Z->down = lastInserted;
-			lastInserted->up = Z;
-			Z->key = X;
-			Z->level = level;
-			pNew->right = Z;
-			qNew->left = Z;
-			lastInserted = Z;
-		}
-		else // p is some node in the level above the newly inserted node Y
-		{
-			cout << "p_key=" << p->key << endl;
-			// The next level exists. Adjust pointers to splice in the new node.
-			// Insert the node at this level
-			Z->key = X;
-			Z->level = level;
-			q = p->right; // q will be the node immediately right of Z
+			head->up = pNew; // the new head is above the old head
+			tail->up = qNew; // the new tail is above the old tail
 
-			Z->left = p; // Adjust pointers to splice in the new node.
-			Z->right = q;
-			Z->down = Y;
-			lastInserted->up = Z;
-			cout << "lastInserted " << lastInserted->key << "l" << lastInserted->level << ".up = " << Z->key << "l" << Z->level <<endl;
-			p->right = Z;
-			q->left = Z;
-			lastInserted = Z;
+			pNew->down = this->head; // old head is below the new head
+
+			qNew->left = pNew; 
+			qNew->down = this->tail; // old tail is below the new tail
+			
+			head = pNew; // update head...
+			tail = qNew; // ... and tail
+			// END adding new layer
+			h++;
 		}
+
+		// Find first element with an up pointer
+		while (p->left != NULL)
+			p = p->left;
+		if (p->up != NULL)
+			p = p->up;
+		// p will now either point to a node in the next level or a sentinel node (which means
+		// the next   higher level was not created in this pass)
+
+		// Configure pointers of new node Z
+		SkipListNode* Z = new SkipListNode(); // Node Z is the extra-level node being inserted 
+		cout << "Insert " << X << " l=" << level << endl; // Debug
+		Z->key = X;
+		Z->left = p;
+		Z->right = p->right;
+		Z->down = Y;
+
+		// Change the neighboring links
+		p->right->left = Z;
+		p->right = Z;
+		Y->up = Z;
+
+		Y = Z; // remember Z next time as Y 
+
+		level++; // one more level has been added to the list
 	}
+
+	n++; // one more entry in the list
 }
 
 SkipList::SkipListNode* SkipList::search(const char* word, bool& found)
 {
 	SkipListNode* P = head; // P starts at the head
+
 	while (true) // Repeat until we return out of the loop
 	{
-		while ((P->right->key != NEG_INF) && (P->right->key != POS_INF)) // While what's to the right of P is not a sentinel node
+		while (P->right->key != POS_INF) // While what's to the right of P is not a sentinel node
 		{
 			int compareValue = strcmp(P->right->key, word);
 			if (compareValue < 0)
@@ -127,12 +121,14 @@ SkipList::SkipListNode* SkipList::search(const char* word, bool& found)
 			}
 			else break;
 		}
+
 		// We've broken out of the loop without returning or it never executed
 		if (P->down == NULL) // In the slow lane?
 		{
 			found = false; // Could not find the node...
 			return P; // ... however, return the pointer to some node that would preceed the one we've found.
 		}
+
 		// Otherwise, drop down a level and repeat
 		P = P->down;
 	}

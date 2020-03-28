@@ -62,6 +62,9 @@ int main()
 	SL->Insert("T");
 	SL->Insert("U");
 	SL->Insert("V");
+	SL->Insert("V");
+	SL->Insert("V");
+	SL->Insert("V");
 	SL->List();
 	SL->Height();
 }

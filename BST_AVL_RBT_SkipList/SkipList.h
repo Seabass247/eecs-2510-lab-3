@@ -1,4 +1,7 @@
 #pragma once
+
+using namespace std;
+
 class SkipList
 {
 public:
@@ -14,7 +17,6 @@ private:
     {
         const char* key;
         int count = 1;
-        int level;
         SkipListNode *up, *down, *left, *right; // all four links
     };
     SkipListNode *head, *tail;
