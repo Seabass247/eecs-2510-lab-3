@@ -2,7 +2,7 @@
 #include "AVL.h"
 #include "BST.h"
 #include "RBT.h"
-
+#include "SkipList.h"
 int main()
 {
 	/*
@@ -24,14 +24,44 @@ int main()
 	BST_T->Height();
 	*/
 
+	/*
 	RBT* RBT_T = new RBT();
-	RBT_T->Insert("B");
-	RBT_T->Insert("A");
-	RBT_T->Insert("C");
-	RBT_T->Insert("D");
-	RBT_T->Insert("D");
-	RBT_T->Insert("D");
 	RBT_T->Insert("E");
+	RBT_T->Insert("D");
+	RBT_T->Insert("D");
+	RBT_T->Insert("D");
+	RBT_T->Insert("C");
+	RBT_T->Insert("A");
+	RBT_T->Insert("B");
 	RBT_T->List();
 	RBT_T->Height();
+	*/
+
+	SkipList* SL = new SkipList();
+	SL->Insert("A");
+	SL->Insert("A");
+	SL->Insert("B");
+	SL->Insert("C");
+	SL->Insert("D");
+	SL->Insert("E");
+	SL->Insert("F");
+	SL->Insert("G");
+	SL->Insert("H");
+	SL->Insert("I");
+	SL->Insert("J");
+	SL->Insert("K");
+	SL->Insert("L");
+	SL->Insert("M");
+	SL->Insert("N");
+	SL->Insert("O");
+	SL->Insert("O");
+	SL->Insert("P");
+	SL->Insert("Q");
+	SL->Insert("R");
+	SL->Insert("S");
+	SL->Insert("T");
+	SL->Insert("U");
+	SL->Insert("V");
+	SL->List();
+	SL->Height();
 }

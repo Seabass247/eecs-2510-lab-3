@@ -151,11 +151,13 @@
     <ClCompile Include="BST.cpp" />
     <ClCompile Include="BST_AVL_RBT_SkipList.cpp" />
     <ClCompile Include="RBT.cpp" />
+    <ClCompile Include="SkipList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVL.h" />
     <ClInclude Include="BST.h" />
     <ClInclude Include="RBT.h" />
+    <ClInclude Include="SkipList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
