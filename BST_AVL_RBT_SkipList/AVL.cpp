@@ -17,15 +17,17 @@ AVL::node* AVL::find(const char* X)
 	// the current word is greater than or less than <word>.
 	while (currentNode != NULL)
 	{
+		int compareValue = strcmp(X, currentNode->data);
+		statKeyComparison++;
 		// If the current node's key is equal to <word>, we've found
 		// the node we're looking for, return it.
-		if (strcmp(currentNode->data, X) == 0)
+		if (compareValue == 0)
 		{
 			return currentNode;
 		}
 		// If the word we're looking for is less than that of the key
 		// we're at, go left.
-		if (strcmp(X, currentNode->data) < 0)
+		if (compareValue < 0)
 		{
 			currentNode = currentNode->LCH;
 		}
@@ -88,6 +90,7 @@ void AVL::Insert(const char* X)
 		}  // a non-zero BF (and its parent)
 		Q = P;                               // Bring Q up to where P is
 		P = (strcmp(X, P->data) < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
+		statKeyComparison++;
 	}
 
 	//
@@ -104,7 +107,7 @@ void AVL::Insert(const char* X)
 	// Will Y be Q's new left or right child?
 	if (strcmp(X, Q->data) < 0) Q->LCH = Y;
 	else Q->RCH = Y;
-
+	
 	//
 	// Detect (and fix, if we have) an imbalance
 	//
@@ -115,12 +118,14 @@ void AVL::Insert(const char* X)
 	//
 	// If X is inserted in the LEFT subtree of A, then d = +1 (d = -1 means
 	// we inserted X in the RIGHT subtree of A.
-
+	statKeyComparison += 2;
 	if (strcmp(X, A->data) > 0) { B = P = A->RCH; d = -1; } // Which way is the displacement (d)
 	else { B = P = A->LCH; d = +1; } // B is identified as A’s child
 
 	while (P != Y)  // P is now one node below A.  Adjust from here to the
 	{               // insertion point.  Don’t do anything to new node (Y)
+		statKeyComparison++;
+		statBFChange++;
 		if (strcmp(X, P->data) > 0) { P->BF = -1; P = P->RCH; } // adjust BF and move forward
 		else { P->BF = +1; P = P->LCH; }
 	}
@@ -132,12 +137,14 @@ void AVL::Insert(const char* X)
 	if (A->BF == 0) // Tree WAS completely balanced before the insert.
 	{             // The insert pushed it to slight (acceptable) imbalance
 		A->BF = d;    // Set the BF to +/- 1 (displacement tells direction)
+		statBFChange++;
 		return;     // This is close enough to live with, so exit now
 	}
 
 	if (A->BF == -d) // If the tree had a slight imbalance the OTHER way, 
 	{               // then did the insertion throw the tree INTO complete
 		A->BF = 0;   // balance? If so, set the BF to zero and we’re done
+		statBFChange++;
 		return;      //
 	}
 
@@ -155,6 +162,9 @@ void AVL::Insert(const char* X)
 			B->RCH = A; // B's right child now points to A.
 			A->BF = 0;
 			B->BF = 0;
+
+			statPointerChange += 2;
+			statBFChange += 2;
 		}
 		else  // LR Rotation: three cases (structurally the same; BFs vary)
 		{
@@ -179,6 +189,8 @@ void AVL::Insert(const char* X)
 
 			C->BF = 0; // Regardless, C is now balanced
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
+			statPointerChange += 4;
+			statBFChange += 3;
 		} // end of else (LR Rotation)
 	} // end of “if (d = +1)”
 	else // d=-1.  This is a right imbalance. Is it RR or RL?
@@ -191,6 +203,8 @@ void AVL::Insert(const char* X)
 			B->LCH = A; // B's left child now points to A.
 			A->BF = 0;
 			B->BF = 0;
+			statPointerChange += 2;
+			statBFChange += 2;
 		}
 		else  // RL Rotation: three cases (structurally the same; BFs vary)
 		{
@@ -204,7 +218,7 @@ void AVL::Insert(const char* X)
 			A->RCH = CL; // A's right child becomes C's original left child
 			C->RCH = B; // C's right child becomes B
 			C->LCH = A; // C's left child becomes A
-
+			statPointerChange += 4;
 			// Set the new BF’s at A and B, based on the BF at C.
 			switch (C->BF)
 			{
@@ -212,6 +226,7 @@ void AVL::Insert(const char* X)
 			case -1: B->BF = C->BF = 0; A->BF = 1; break; // B & C's BFs go to 0. A's goes to -1
 			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to 1
 			}
+			statBFChange += 3;
 
 			C->BF = 0; // Regardless, C is now balanced
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
@@ -227,8 +242,18 @@ void AVL::Insert(const char* X)
 	// rebalanced was LEFT of F, then B needs to be left of F;
 	// if A was RIGHT of F, then B now needs to be right of F.
 	//
-	if (A == F->LCH) { F->LCH = B; return; }
-	if (A == F->RCH) { F->RCH = B; return; }
+	if (A == F->LCH) 
+	{ 
+		F->LCH = B; 
+		statPointerChange++;
+		return; 
+	}
+	if (A == F->RCH)
+	{
+		F->RCH = B;
+		statPointerChange++;
+		return; 
+	}
 	cout << "We should never be here\n";
 }
 
@@ -238,31 +263,62 @@ void AVL::List()
 {
 	cout << "AVL tree contains: ";
 	if (root != NULL)
-		traverse(root);
+		traverse_list(root);
 	cout << endl;
 }
 
 // A recursive in-order traversal (processes left subtree, then root, then right subtree)
-void AVL::traverse(node* p)
+void AVL::traverse_list(node* p)
 {
 	// If p has a left child, traverse the left subtree.
 	if (p->LCH != NULL)
-		traverse(p->LCH);
+		traverse_list(p->LCH);
 	// process the root of the subtree
 	cout << p->count << " \'" << p->data << "\'" << " BF=" << p->BF << ",";
 	// If p has a right child, traverse the right subtree.
 	if (p->RCH != NULL)
-		traverse(p->RCH);
+		traverse_list(p->RCH);
 }
+
+// A recursive in-order traversal (processes left subtree, then root, then right subtree)
+void AVL::traverse(node* p, int& distinctCount, int& totalCount)
+{
+	// If p has a left child, traverse the left subtree.
+	if (p->LCH != NULL)
+		traverse(p->LCH, distinctCount, totalCount);
+	// Update the counts.
+	distinctCount++;
+	totalCount += p->count;
+	// If p has a right child, traverse the right subtree.
+	if (p->RCH != NULL)
+		traverse(p->RCH, distinctCount, totalCount);
+}
+
 
 // Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
 // a one-node tree.
-void AVL::Height()
+int AVL::TreeHeight()
 {
 	int count = 0;
 	if (root != NULL) // If the tree isn't empty, get its the height
 		count = traverse_height(root);
-	cout << "AVL tree height= " << count << endl;
+	return count;
+}
+
+void AVL::DisplayStatistics()
+{
+	int height = TreeHeight();
+	int distinctNodes = 0;
+	int totalNodes = 0;
+	if (root != NULL)
+		traverse(root, distinctNodes, totalNodes);
+
+	cout << "AVL_distinct_items=" << distinctNodes << endl;
+	cout << "AVL_total_items=" << totalNodes << endl;
+	cout << "AVL_height=" << height << endl;
+	cout << "AVL_key_comparisons=" << statKeyComparison << endl;
+	cout << "AVL_child_pointer_changes=" << statPointerChange << endl;
+	cout << "AVL_BF_changes=" << statBFChange << endl;
 }
 
 // Recursively traverse through the tree, comparing the height of the left subtree against

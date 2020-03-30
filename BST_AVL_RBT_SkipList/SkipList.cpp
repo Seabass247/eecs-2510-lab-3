@@ -16,7 +16,7 @@ SkipList::SkipList()
 	tail->left = head; // ... each other
 	n = 0; // no entries yet (empty list)
 	h = 1; // no new levels yet, just a single level
-	srand(time(NULL)); // seed the RNG with a unique seed as to generate new "random" sequences every time
+	coin = mt19937(time(NULL)); // seed the RNG with a unique seed as to generate new "random" sequences every time
 }
 
 void SkipList::Insert(const char* X)
@@ -34,14 +34,14 @@ void SkipList::Insert(const char* X)
 	Y->key = X;
 
 	// Splice in Y in between p (immediate left of Y) and q (immediate right of Y)
-	SkipListNode* q = p->right;
+	SkipListNode* q = p->right; 
 	Y->left = p; // Adjust pointers to splice in the new node.
 	Y->right = q;
 	p->right = Y;
 	q->left = Y;
 
 	int level = 1;
-	while (rand() & 1) // Approximately half the time, create a node in the level above
+	while (coin() & 1) // Approximately half the time, create a node in the level above
 	{
 		if (level >= h)
 		{
@@ -78,7 +78,7 @@ void SkipList::Insert(const char* X)
 
 		// Configure pointers of new node Z
 		SkipListNode* Z = new SkipListNode(); // Node Z is the extra-level node being inserted 
-		cout << "Insert " << X << " l=" << level << endl; // Debug
+
 		Z->key = X;
 		Z->left = p;
 		Z->right = p->right;

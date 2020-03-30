@@ -10,8 +10,13 @@ public:
 
 	void Insert(const char* word);
 	void List();
-	void Height();
+	int TreeHeight();
+	void DisplayStatistics();
 private:
+	int statKeyComparison = 0;
+	int statPointerChange = 0;
+	int statBFChange = 0;
+
 	struct node
 	{
 		const char* data;
@@ -23,6 +28,7 @@ private:
 
 	node* root = NULL;
 	node* find(const char* word);
-	void traverse(node* p);
+	void traverse_list(node* p);
+	void traverse(node* p, int& distinctCount, int& totalCount);
 	int traverse_height(node* p);
 };

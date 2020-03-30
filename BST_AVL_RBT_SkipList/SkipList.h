@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 
 using namespace std;
 
@@ -11,6 +12,8 @@ public:
     void List();
     void Height();
 private:
+    mt19937 coin;
+
     const char* NEG_INF = "negInf";
     const char* POS_INF = "posInf";
     struct SkipListNode
