@@ -11,7 +11,7 @@ public:
 
 	void Insert(const char* word);
 	void List();
-	void Height();
+	int  TreeHeight();
 private:
 	enum class Color { red, black };
 	struct node

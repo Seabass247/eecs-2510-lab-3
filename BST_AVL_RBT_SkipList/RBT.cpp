@@ -88,12 +88,12 @@ void RBT::List()
 
 // Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
 // a one-node tree.
-void RBT::Height()
+int RBT::TreeHeight()
 {
 	int count = 0;
 	if (root != NULL) // If the tree isn't empty, get its the height
 		count = traverse_height(root);
-	cout << "RBT tree height= " << count << endl;
+	return count;
 }
 
 

@@ -5,7 +5,6 @@
 #include "SkipList.h"
 int main()
 {
-	
 	AVL* AVL_T = new AVL();
 	AVL_T->Insert("A");
 	AVL_T->Insert("B");
