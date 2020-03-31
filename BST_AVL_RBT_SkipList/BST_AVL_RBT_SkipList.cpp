@@ -85,6 +85,6 @@ int main()
 	SL->Insert("V");
 	SL->Insert("V");
 	SL->List();
-	
+	SL->DisplayStatistics();
 	cout << endl;
 }

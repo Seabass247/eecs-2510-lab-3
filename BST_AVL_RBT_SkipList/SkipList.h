@@ -11,7 +11,10 @@ public:
     void Insert(const char* X);
     void List();
     int getListHeight() { return h; };
+    void DisplayStatistics();
 private:
+    int statKeyComparison = 0;
+    int statPointerChange = 0;
     mt19937 coin;
 
     const char* NEG_INF = "negInf";
@@ -27,5 +30,5 @@ private:
     int n; // Number of items in list (slow lane)
     
     SkipListNode* search(const char* word, bool& found);
-    void traverse();
+    void traverse(int& distinctNodes, int& totalNodes, int* nodesInLevel);
 };

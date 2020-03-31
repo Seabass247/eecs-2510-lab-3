@@ -61,7 +61,8 @@ void SkipList::Insert(const char* X)
 
 			qNew->left = pNew; 
 			qNew->down = this->tail; // old tail is below the new tail
-			
+			statPointerChange += 7;
+
 			head = pNew; // update head...
 			tail = qNew; // ... and tail
 			// END adding new layer
@@ -88,6 +89,7 @@ void SkipList::Insert(const char* X)
 		p->right->left = Z;
 		p->right = Z;
 		Y->up = Z;
+		statPointerChange++;
 
 		Y = Z; // remember Z next time as Y 
 
@@ -103,9 +105,10 @@ SkipList::SkipListNode* SkipList::search(const char* word, bool& found)
 
 	while (true) // Repeat until we return out of the loop
 	{
-		while (P->right->key != POS_INF) // While what's to the right of P is not a sentinel node
+		while (strcmp(P->right->key, POS_INF) != 0) // While what's to the right of P is not a sentinel node
 		{
 			int compareValue = strcmp(P->right->key, word);
+			statKeyComparison += 2;
 			if (compareValue < 0)
 			{
 				P = P->right; // move p to the right
@@ -154,23 +157,68 @@ void SkipList::List()
 	}
 }
 
-void SkipList::traverse()
+void SkipList::DisplayStatistics()
+{
+	int height = getListHeight();
+	int distinctNodes = 0;
+	int totalNodes = 0;
+	int* nodesInlevel = new int[height];
+	traverse(distinctNodes, totalNodes, nodesInlevel);
+	int fastLaneNodes = totalNodes - distinctNodes;
+
+	cout << "SkipList_slow_lane_nodes=" << distinctNodes << endl;
+	cout << "SkipList_fast_lane_nodes=" << fastLaneNodes << endl;
+	cout << "SkipList_height=" << height << endl;
+	cout << "SkipList_distinct_nodes=" << distinctNodes << endl;
+	cout << "SkipList_total_nodes=" << totalNodes << endl;
+	cout << "SkipList_key_comparisons=" << statKeyComparison << endl;
+	cout << "SkipList_pointer_changes=" << statPointerChange << endl;
+	for (int i = 0; i < height; i++) // List the no. of nodes in each level starting from level 1 (the top)...
+		// ...to level h (where h=height), each outputted on their own new line
+	{
+		int level = i + 1;
+		cout << "SkipList_nodes_lane_" << level << "=" << nodesInlevel[i] <<endl;
+	}
+}
+
+void SkipList::traverse(int& distinctNodes, int& totalNodes, int* nodesInLevel)
 {
 	SkipListNode* p = head;
+	int measuredHeight = 1;
 	while (p->down != NULL) // move p to bottom-most node in left sentinel pillar
+	{
 		p = p->down;
+		measuredHeight++;
+	}
+	
 	p = p->right;
 	while (p->key != POS_INF)
 	{
 		SkipListNode* q = p;
 		// Do something per unique node
-
+		distinctNodes++;
 		do
 		{
 			// Do something for every level of that node
-
+			++totalNodes;
 			q = q->up;
 		} while (q != NULL);
 		p = p->right;
+	}
+	
+	p = head;
+	SkipListNode* q = p;
+	int level = 0; // level 0 wiill be the top-most level
+	while (q != NULL) // Do something for every level (starting from the top)
+	{
+		int nodeCount = 0;
+		p = q->right;
+		while (strcmp(p->key, POS_INF) != 0) // Do something for every node in that level
+		{
+			nodeCount++;
+			p = p->right;
+		}
+		q = q->down;
+		nodesInLevel[level++] = nodeCount;
 	}
 }
