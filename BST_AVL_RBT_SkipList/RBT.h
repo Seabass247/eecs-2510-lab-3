@@ -9,7 +9,7 @@ public:
 	RBT();
 	~RBT();
 
-	void Insert(const char* word);
+	void Insert(char X[50]);
 	void List();
 	void DisplayStatistics();
 	int  TreeHeight();
@@ -27,12 +27,17 @@ private:
 	enum class Color { red, black };
 	struct node
 	{
-		const char* data = "";
+		char data[50] = {0};
 		int count = 1;
 		node* LCH = NULL;
 		node* RCH = NULL;
 		node* parent = NULL;
 		Color color = Color::black;
+
+		node(const char* word)
+		{
+			strcpy_s(data, word);
+		}
 	};
 
 	node* root = NULL;
@@ -41,7 +46,6 @@ private:
 	void insert_fixup(node* z); 
 	void left_rotate(node* x);
 	void right_rotate(node* x);
-	node* find(const char* word);
 	void traverse(node* p, int& distinctNodes, int& totalNodes);
 	void traverse_list(node* p);
 	int traverse_height(node* p);

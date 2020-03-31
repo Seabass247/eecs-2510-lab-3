@@ -8,52 +8,50 @@ RBT::RBT()
 {
 	// Initialize the nil node, containing an empty string for a key,
 	// points to itself for children and parent.
-	node* nil = new node();
-	nil->data = "";
+	node* nil = new node("");
 	nil->color = Color::black;
 	nil->parent = nil;
 	nil->LCH = nil;
 	nil->RCH = nil;
 	this->nil = nil;
+	statChildPointerChange += 2;
+	statParentPointerChange++;
 }
 
 // Inserts a new value into the RBT Tree. If the value is already in the tree,
 // increment the count of the appropriate node by 1 and return.  Otherwise,
 // initialize a new node, find an appropriate place to insert it based on the 
 // value of its key, then fix any RBT violations caused by the insertion.
-void RBT::Insert(const char* X)
+void RBT::Insert(char X[50])
 {
 	node* P; // P will be used to scan through the tree until it falls off bottom. 
 	node* Q; // Q lags behind P, so it will be the parent of Y when P falls off.
 	
-	// If the node we're inserting is already in the tree, just add 1 to its count
-	// and exit
-	node* findNode;
-	if ((findNode = find(X)) != NULL) // If there's a node in the tree that matches key X
-		// Node found. Increment the count and exit. We're done here.
-	{
-		findNode->count++;
-		return; // This is all that needs done for this case
-	}
-
 	//
 	// Locate insertion point for X.
 	//
 	Q = nil; // Q lags behind P so it starts NULL
 	P = root; // P starts at the root
+	
 	while (P != nil && P != NULL) // search tree for insertion point
 	{
+		int comparisonValue = strcmp(X, P->data);
+		if (comparisonValue == 0) {
+			P->count++;
+			return;  // ALREADY HERE!
+		}
 		Q = P; // Bring Q up to where P is
-		P = (strcmp(X, P->data) < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
+		P = (comparisonValue < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
 		statKeyComparison++;
 	}
 
 	if (Q == nil) // Empty tree? Make a new node (R) the root and exit!
 	{
-		node* R = new node; // make and fill a node
-		R->data = X; // make the insertion data this node's key
+		node* R = new node(X); // make and fill a node
 		R->LCH = R->RCH = nil; // leaf --> children point to nil
 		R->parent = nil; // point to the nil node
+		statChildPointerChange += 2;
+		statParentPointerChange++;
 		root = R; // root was NULL, so R is new root
 		return; // This was the trivial case
 	}
@@ -61,13 +59,13 @@ void RBT::Insert(const char* X)
 	// At this point, P is nil, but Q points at the last node where X
 	// belongs (either as Q’s LCH or RCH, and Q points at an existing leaf)
 	//
-	node* Z = new node;   // Make a new node (Z) to be inserted
-	Z->data = X;    // Put our data (X) in it
+	node* Z = new node(X);   // Make a new node (Z) to be inserted
+	//Z->data = *X;    // Put our data (X) in it
 	Z->LCH = nil; // New nodes are always inserted...
 	Z->RCH = nil; // ...as leaves, where RBT leaves' children point to nil
 	Z->parent = Q; // Y's parent is that last node we found before falling off the tree
 	Z->color = Color::red; // Color this node red for now (safe?)
-
+	statChildPointerChange++;
 	// Will Y be Q's new left or right child?
 	if (strcmp(X, Q->data) < 0) Q->LCH = Z;
 	else Q->RCH = Z;
@@ -270,38 +268,6 @@ void RBT::right_rotate(node* x)
 	x->parent = y;
 	statParentPointerChange++;
 	statrightRotation++;
-}
-
-// A helper function which returns the node associated with the key word, 
-// and if no node is found, or the tree is empty, returns NULL.
-RBT::node* RBT::find(const char* X)
-{
-	node* currentNode = root;
-	// Follow the left and right child pointers depending on whether
-	// the current word is greater than or less than <word>.
-	while (currentNode != nil && currentNode != NULL)
-	{
-		int compareValue = strcmp(X, currentNode->data);
-		statKeyComparison++;
-		// If the current node's key is equal to <word>, we've found
-		// the node we're looking for, return it.
-		if (compareValue == 0)
-		{
-			return currentNode;
-		}
-		// If the word we're looking for is less than that of the key
-		// we're at, go left.
-		if (compareValue < 0)
-		{
-			currentNode = currentNode->LCH;
-		}
-		// Otherwise it's greater, go right.
-		else
-		{
-			currentNode = currentNode->RCH;
-		}
-	}
-	return NULL;
 }
 
 // A recursive in-order traversal (processes left subtree, then root, then right subtree)
