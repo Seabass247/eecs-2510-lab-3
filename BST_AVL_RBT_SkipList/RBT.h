@@ -18,6 +18,11 @@ private:
 	int statChildPointerChange = 0;
 	int statParentPointerChange = 0;
 	int statRecoloring = 0;
+	int statleftRotation = 0;
+	int statrightRotation = 0;
+	int statCase1 = 0;
+	int statCase2 = 0;
+	int statCase3 = 0;
 
 	enum class Color { red, black };
 	struct node

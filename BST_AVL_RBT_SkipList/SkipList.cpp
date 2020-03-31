@@ -208,7 +208,7 @@ void SkipList::traverse(int& distinctNodes, int& totalNodes, int* nodesInLevel)
 	
 	p = head;
 	SkipListNode* q = p;
-	int level = 0; // level 0 wiill be the top-most level
+	int level = 0; // level 0 will be the top-most level
 	while (q != NULL) // Do something for every level (starting from the top)
 	{
 		int nodeCount = 0;

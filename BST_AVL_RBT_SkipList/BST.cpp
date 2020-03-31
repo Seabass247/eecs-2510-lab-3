@@ -226,8 +226,8 @@ void BST::DisplayStatistics()
 	cout << "BST_distinct_items=" << distinctNodes << endl;
 	cout << "BST_total_items=" << totalNodes << endl;
 	cout << "BST_height=" << height << endl;
-	cout << "BST_key_comparisons=" << statKeyComparison << endl;
 	cout << "BST_child_pointer_changes=" << statPointerChange << endl;
+	cout << "BST_key_comparisons=" << statKeyComparison << endl;
 	
 }
 

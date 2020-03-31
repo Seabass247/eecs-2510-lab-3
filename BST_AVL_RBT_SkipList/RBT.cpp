@@ -103,6 +103,11 @@ void RBT::DisplayStatistics()
 	cout << "RBT_child_pointer_changes=" << statChildPointerChange << endl;
 	cout << "RBT_parent_pointer_changes=" << statParentPointerChange << endl;
 	cout << "RBT_recolorings=" << statRecoloring << endl;
+	cout << "RBT_left_rotations=" << statleftRotation << endl;
+	cout << "RBT_right_rotations=" << statrightRotation << endl;
+	cout << "RBT_case_1_problems=" << statCase1 << endl;
+	cout << "RBT_case_2_problems=" << statCase2 << endl;
+	cout << "RBT_case_3_problems=" << statCase3 << endl;
 }
 
 // Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
@@ -153,6 +158,7 @@ void RBT::insert_fixup(node* z)
 				z->parent->parent->color = Color::red; // Case 1
 				statRecoloring += 3;
 				z = z->parent->parent; // Case 1 (z becomes z's grandparent)
+				statCase1++;
 			}
 			else // else its possibly a case 2 problem, which always falls into case 3
 				// it's a case 3 problem directly if z is a left child
@@ -161,11 +167,13 @@ void RBT::insert_fixup(node* z)
 				{
 					z = z->parent; // Case 2
 					left_rotate(z); // Case 2
+					statCase2++;
 				}
 				z->parent->color = Color::black; // Case 3
 				z->parent->parent->color = Color::red; // Case 3
 				statRecoloring += 2;
 				right_rotate(z->parent->parent); // Case 3
+				statCase3++;
 			}
 		} else // Symmetric case; is z's parent a *right* child of *its* parent?
 		{
@@ -177,6 +185,7 @@ void RBT::insert_fixup(node* z)
 				z->parent->parent->color = Color::red; // Case 1
 				statRecoloring += 3;
 				z = z->parent->parent; // Case 1 (z becomes z's grandparent)
+				statCase1++;
 			}
 			else // else its possibly a case 2 problem, which always falls into case 3
 				// it's a case 3 problem directly if z is a right child
@@ -185,11 +194,13 @@ void RBT::insert_fixup(node* z)
 				{
 					z = z->parent; // Case 2
 					right_rotate(z); // Case 2
+					statCase2++;
 				}
 				z->parent->color = Color::black; // Case 3
 				z->parent->parent->color = Color::red; // Case 3
 				statRecoloring += 2;
 				left_rotate(z->parent->parent); // Case 3
+				statCase3++;
 			}
 		}
 	} // end of cases
@@ -226,6 +237,7 @@ void RBT::left_rotate(node* x)
 	statChildPointerChange++;
 	x->parent = y;
 	statParentPointerChange++;
+	statleftRotation++;
 }
 
 // Changes relevant pointers to nodes in the tree to reflect a right rotation around node x.
@@ -257,6 +269,7 @@ void RBT::right_rotate(node* x)
 	statChildPointerChange++;
 	x->parent = y;
 	statParentPointerChange++;
+	statrightRotation++;
 }
 
 // A helper function which returns the node associated with the key word, 

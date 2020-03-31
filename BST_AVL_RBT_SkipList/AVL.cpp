@@ -8,38 +8,6 @@ AVL::AVL()
 	root = NULL;
 }
 
-// A helper function which returns the node associated with the key word, 
-// and if no node is found, or the tree is empty, returns NULL.
-AVL::node* AVL::find(const char* X)
-{
-	node* currentNode = root;
-	// Follow the left and right child pointers depending on whether
-	// the current word is greater than or less than <word>.
-	while (currentNode != NULL)
-	{
-		int compareValue = strcmp(X, currentNode->data);
-		statKeyComparison++;
-		// If the current node's key is equal to <word>, we've found
-		// the node we're looking for, return it.
-		if (compareValue == 0)
-		{
-			return currentNode;
-		}
-		// If the word we're looking for is less than that of the key
-		// we're at, go left.
-		if (compareValue < 0)
-		{
-			currentNode = currentNode->LCH;
-		}
-		// Otherwise it's greater, go right.
-		else
-		{
-			currentNode = currentNode->RCH;
-		}
-	}
-	return NULL;
-}
-
 // Inserts a new value into the AVL Tree. If the value is already in the tree,
 // increment the count of the appropriate node by 1 and return.  Otherwise,
 // initialize a new node, find an appropriate place to insert it based on the 
@@ -47,6 +15,7 @@ AVL::node* AVL::find(const char* X)
 // subtrees to decrease any balance factors of magnitude 2.
 void AVL::Insert(const char* X)
 {
+	statNoRotation++;
 	node* Y; // The new node we insert (z in the previous code)
 	node* A, * B; // A will be the last parent above Y with a BF of ±1 (before the insert)
 	node* F; // F is A’s parent (F lags one step behind A)
@@ -65,16 +34,6 @@ void AVL::Insert(const char* X)
 		return;          // This was the trivial case
 	}
 
-	// If the node we're inserting is already in the tree, just add 1 to its count
-	// and exit
-	node* findNode;
-	if ((findNode = find(X)) != NULL) // If there's a node in the tree that matches key X
-		// Node found. Increment the count and exit. We're done here.
-	{
-		findNode->count++;
-		return; // This is all that needs done for this case
-	}
-
 	//
 	// Locate insertion point for X.
 	//
@@ -83,13 +42,17 @@ void AVL::Insert(const char* X)
 
 	while (P != NULL) // search tree for insertion point
 	{
-		if (X == P->data) return;  // ALREADY HERE!
+		int comparisonValue = strcmp(X, P->data);
+		if (comparisonValue == 0) {
+			P->count++;
+			return;  // ALREADY HERE!
+		}
 		if (P->BF != 0)   // remember the last place we saw
 		{
 			A = P; F = Q;
 		}  // a non-zero BF (and its parent)
 		Q = P;                               // Bring Q up to where P is
-		P = (strcmp(X, P->data) < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
+		P = (comparisonValue < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
 		statKeyComparison++;
 	}
 
@@ -138,6 +101,7 @@ void AVL::Insert(const char* X)
 	{             // The insert pushed it to slight (acceptable) imbalance
 		A->BF = d;    // Set the BF to +/- 1 (displacement tells direction)
 		statBFChange++;
+		statAtoYBFChange++;
 		return;     // This is close enough to live with, so exit now
 	}
 
@@ -145,12 +109,12 @@ void AVL::Insert(const char* X)
 	{               // then did the insertion throw the tree INTO complete
 		A->BF = 0;   // balance? If so, set the BF to zero and we’re done
 		statBFChange++;
-		return;      //
+		statAtoYBFChange++;
+		return;      
 	}
 
 	// If we end up here, we took neither of the two returns just above, and the tree 
 	// is now UNACCEPTABLY IMBALANCED.
-
 	if (d == +1) // this is a left imbalance (left subtree too tall).  
 		   // Is it LL or LR?
 	{
@@ -165,6 +129,9 @@ void AVL::Insert(const char* X)
 
 			statPointerChange += 2;
 			statBFChange += 2;
+			statAtoYBFChange += 2;
+			statLL++;
+			statNoRotation--;
 		}
 		else  // LR Rotation: three cases (structurally the same; BFs vary)
 		{
@@ -191,6 +158,9 @@ void AVL::Insert(const char* X)
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
 			statPointerChange += 4;
 			statBFChange += 3;
+			statAtoYBFChange += 3;
+			statLR++;
+			statNoRotation--;
 		} // end of else (LR Rotation)
 	} // end of “if (d = +1)”
 	else // d=-1.  This is a right imbalance. Is it RR or RL?
@@ -205,6 +175,9 @@ void AVL::Insert(const char* X)
 			B->BF = 0;
 			statPointerChange += 2;
 			statBFChange += 2;
+			statAtoYBFChange += 2;
+			statRR++;
+			statNoRotation--;
 		}
 		else  // RL Rotation: three cases (structurally the same; BFs vary)
 		{
@@ -227,7 +200,9 @@ void AVL::Insert(const char* X)
 			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to 1
 			}
 			statBFChange += 3;
-
+			statAtoYBFChange += 3;
+			statRL++;
+			statNoRotation--;
 			C->BF = 0; // Regardless, C is now balanced
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
 		} // end of else (RL Rotation)
@@ -319,6 +294,12 @@ void AVL::DisplayStatistics()
 	cout << "AVL_key_comparisons=" << statKeyComparison << endl;
 	cout << "AVL_child_pointer_changes=" << statPointerChange << endl;
 	cout << "AVL_BF_changes=" << statBFChange << endl;
+	cout << "AVL_A_to_Y_BF_changes=" << statAtoYBFChange << endl;
+	cout << "AVL_LL_rotations=" << statLL << endl;
+	cout << "AVL_LR_rotations=" << statLR << endl;
+	cout << "AVL_RR_rotations=" << statRR << endl;
+	cout << "AVL_RL_rotations=" << statRL << endl;
+	cout << "AVL_no_rotation_needed=" << statNoRotation << endl;
 }
 
 // Recursively traverse through the tree, comparing the height of the left subtree against
