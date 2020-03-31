@@ -10,7 +10,7 @@ public:
 
     void Insert(const char* X);
     void List();
-    void Height();
+    int getListHeight() { return h; };
 private:
     mt19937 coin;
 
@@ -27,4 +27,5 @@ private:
     int n; // Number of items in list (slow lane)
     
     SkipListNode* search(const char* word, bool& found);
+    void traverse();
 };

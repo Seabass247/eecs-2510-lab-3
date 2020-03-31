@@ -136,6 +136,7 @@ SkipList::SkipListNode* SkipList::search(const char* word, bool& found)
 
 void SkipList::List()
 {
+	cout << "SkipList contains: " << endl;
 	SkipListNode* p = head;
 	while (p->down != NULL) // move p to bottom-most node in left sentinel pillar
 		p = p->down;
@@ -145,16 +146,31 @@ void SkipList::List()
 		SkipListNode* q = p;
 		do
 		{
-			cout << q->key << "x"<< q->count << " ";
+			cout << q->key << "x" << q->count << " ";
 			q = q->up;
-		} 
-		while (q != NULL);
+		} while (q != NULL);
 		cout << endl;
 		p = p->right;
 	}
 }
 
-void SkipList::Height()
+void SkipList::traverse()
 {
-	cout << "SkipList height=" << h << endl;
+	SkipListNode* p = head;
+	while (p->down != NULL) // move p to bottom-most node in left sentinel pillar
+		p = p->down;
+	p = p->right;
+	while (p->key != POS_INF)
+	{
+		SkipListNode* q = p;
+		// Do something per unique node
+
+		do
+		{
+			// Do something for every level of that node
+
+			q = q->up;
+		} while (q != NULL);
+		p = p->right;
+	}
 }

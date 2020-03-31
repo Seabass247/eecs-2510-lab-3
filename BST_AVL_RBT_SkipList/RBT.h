@@ -11,8 +11,14 @@ public:
 
 	void Insert(const char* word);
 	void List();
+	void DisplayStatistics();
 	int  TreeHeight();
 private:
+	int statKeyComparison = 0;
+	int statChildPointerChange = 0;
+	int statParentPointerChange = 0;
+	int statRecoloring = 0;
+
 	enum class Color { red, black };
 	struct node
 	{
@@ -31,6 +37,7 @@ private:
 	void left_rotate(node* x);
 	void right_rotate(node* x);
 	node* find(const char* word);
-	void traverse(node* p);
+	void traverse(node* p, int& distinctNodes, int& totalNodes);
+	void traverse_list(node* p);
 	int traverse_height(node* p);
 };

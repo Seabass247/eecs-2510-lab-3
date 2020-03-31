@@ -42,12 +42,17 @@ int main()
 	RBT* RBT_T = new RBT();
 	RBT_T->Insert("E");
 	RBT_T->Insert("D");
-	RBT_T->Insert("D");
-	RBT_T->Insert("D");
+	RBT_T->Insert("C");
+	RBT_T->Insert("C");
+	RBT_T->Insert("C");
+	RBT_T->Insert("C");
+	RBT_T->Insert("C");
+	RBT_T->Insert("C");
 	RBT_T->Insert("C");
 	RBT_T->Insert("A");
 	RBT_T->Insert("B");
 	RBT_T->List();
+	RBT_T->DisplayStatistics();
 	
 	cout << endl;
 
@@ -80,7 +85,6 @@ int main()
 	SL->Insert("V");
 	SL->Insert("V");
 	SL->List();
-	SL->Height();
 	
 	cout << endl;
 }
