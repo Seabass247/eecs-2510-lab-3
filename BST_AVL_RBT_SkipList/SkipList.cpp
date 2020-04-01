@@ -22,48 +22,7 @@ SkipList::SkipList()
 void SkipList::Insert(char X[50])
 {
 	bool found = false;
-	debugSearchDepth = 0;
-	//SkipListNode* p = search(X, found);
-	SkipListNode* p;
-	{
-		SkipListNode* P = head; // P starts at the head
-		int compareValue;
-
-		while (true) // Repeat until we return out of the loop
-		{
-			debugSearchDepth++;
-			compareValue = strcmp(X, P->right->key);
-
-			//cout << "Compare " << word << " w/ " << P->right->key << endl;
-			statKeyComparison++;
-			if (compareValue == 0)
-			{
-				P = P->right;
-				while (P->down != NULL) // move p to bottom-most node
-					P = P->down;
-				found = true; // this nodes already here
-				p = P;
-				break;
-			}
-			if (compareValue > 0 && P->right->right != NULL) // The node to the right is greater and is not sentinel
-			{
-				P = P->right; // Go right
-				continue;
-			}
-
-			if (P->down == NULL) // In the slow lane?
-			{
-				found = false; // Could not find the node...
-				p = P;
-				break;
-			}
-
-			// Otherwise, drop down a level and repeat
-			P = P->down;
-		}
-	}
-	//cout << "Search " << X << ": " << debugSearchDepth << endl;
-
+	SkipListNode* p = search(X, found);
 
 	if (found) // The node is already in the tree, increment its count
 	{
@@ -82,7 +41,7 @@ void SkipList::Insert(char X[50])
 
 	p->right->left = Y;
 	p->right = Y;
-
+	
 	int level = 1;
 	while (coin() & 1) // Approximately half the time, create a node in the level above
 	{
@@ -96,27 +55,29 @@ void SkipList::Insert(char X[50])
 			strcpy_s(pNew->key, NEG_INF);
 			SkipListNode* qNew = new SkipListNode();
 			strcpy_s(qNew->key, POS_INF);
+
 			pNew->right = qNew; // link them...
 			qNew->left = pNew; // ...together
 
 			head->up = pNew; // the new head is above the old head
 			tail->up = qNew; // the new tail is above the old tail
 
-			pNew->down = this->head; // old head is below the new head
+			pNew->down = head; // old head is below the new head
 
 			qNew->left = pNew; 
-			qNew->down = this->tail; // old tail is below the new tail
-			statPointerChange += 7;
+			qNew->down = tail; // old tail is below the new tail
 
 			head = pNew; // update head...
 			tail = qNew; // ... and tail
 			
+			statPointerChange += 9;
+
 			// END adding new layer
 			h++;
 
 		}
 
-		////// Find first element with an up pointer
+		// Find first element with an up pointer
 		while (p->up == NULL)
 			p = p->left;
 		p = p->up;
@@ -131,6 +92,7 @@ void SkipList::Insert(char X[50])
 		Z->left = p;
 		Z->right = p->right;
 		Z->down = Y;
+		statPointerChange += 3;
 
 		// Change the neighboring links
 		p->right->left = Z;
@@ -139,27 +101,20 @@ void SkipList::Insert(char X[50])
 		statPointerChange += 3;
 
 		Y = Z; // remember Z next time as Y 
-		
-
-
-
-		
+		statPointerChange++;
 	}
 
 	n++; // one more entry in the list
 }
 
-SkipList::SkipListNode* SkipList::search(const char* word, bool& found)
+SkipList::SkipListNode* SkipList::search(const char* X, bool& found)
 {
 	SkipListNode* P = head; // P starts at the head
 	int compareValue;
 
 	while (true) // Repeat until we return out of the loop
 	{
-		debugSearchDepth++;
-		compareValue = strcmp(word, P->right->key);
-			
-		//cout << "Compare " << word << " w/ " << P->right->key << endl;
+		compareValue = strcmp(X, P->right->key);
 		statKeyComparison++;
 		if (compareValue == 0)
 		{
@@ -178,14 +133,13 @@ SkipList::SkipListNode* SkipList::search(const char* word, bool& found)
 		if (P->down == NULL) // In the slow lane?
 		{
 			found = false; // Could not find the node...
-			return P; // ... however, return the pointer to some node that would preceed the one we've found.
+			return P;
 		}
 
 		// Otherwise, drop down a level and repeat
 		P = P->down;
 	}
 }
-
 void SkipList::List()
 {
 	cout << "SkipList contains: " << endl;
@@ -210,19 +164,19 @@ void SkipList::List()
 void SkipList::DisplayStatistics()
 {
 	int height = getListHeight();
-	int distinctNodes = 0;
+	int distinctWord = 0;
 	int totalNodes = 0;
 	int totalWords = 0;
 	int* nodesInlevel = new int[height];
-	traverse(distinctNodes, totalNodes, totalWords, nodesInlevel);
-	int fastLaneNodes = totalNodes - distinctNodes;
+	traverse(distinctWord, totalNodes, totalWords, nodesInlevel);
+	int fastLaneNodes = totalNodes - distinctWord;
 
-	cout << "SkipList_slow_lane_nodes=" << distinctNodes << endl;
+	cout << "SkipList_slow_lane_nodes=" << distinctWord << endl;
 	cout << "SkipList_fast_lane_nodes=" << fastLaneNodes << endl;
 	cout << "SkipList_height=" << height << endl;
-	cout << "SkipList_distinct_nodes=" << distinctNodes << endl;
+	cout << "SkipList_distinct_words=" << distinctWord << endl;
 	cout << "SkipList_total_words=" << totalWords << endl;
-	cout << "SkipList_total_nodes=" << totalNodes << endl;
+	cout << "SkipList_total_list_nodes=" << totalNodes << endl;
 	cout << "SkipList_key_comparisons=" << statKeyComparison << endl;
 	cout << "SkipList_pointer_changes=" << statPointerChange << endl;
 	for (int i = 0; i < height; i++) // List the no. of nodes in each level starting from level 1 (the top)...
