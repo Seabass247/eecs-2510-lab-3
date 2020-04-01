@@ -15,7 +15,6 @@ AVL::AVL()
 // subtrees to decrease any balance factors of magnitude 2.
 void AVL::Insert(const char* X)
 {
-	statNoRotation++;
 	node* Y; // The new node we insert (z in the previous code)
 	node* A, * B; // A will be the last parent above Y with a BF of ±1 (before the insert)
 	node* F; // F is A’s parent (F lags one step behind A)
@@ -31,6 +30,7 @@ void AVL::Insert(const char* X)
 		Y->BF = 0;     // it is, by definition, balanced
 		root = Y;        // root was NULL, so Y is new root
 		statPointerChange += 4;
+		statNoRotation++;
 		return;          // This was the trivial case
 	}
 
@@ -48,7 +48,7 @@ void AVL::Insert(const char* X)
 			P->count++;
 			return;  // ALREADY HERE!
 		}
-		if (P->BF != 0)   // remember the last place we saw
+		if (P->BF != 0) // remember the last place we saw
 		{
 			A = P; F = Q;
 		}  // a non-zero BF (and its parent)
@@ -56,6 +56,7 @@ void AVL::Insert(const char* X)
 		P = (comparisonValue < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
 	}
 
+	statNoRotation++;
 	//
 	// At this point, P is NULL, but Q points at the last node where X
 	// belongs (either as Q’s LCH or RCH, and Q points at an existing leaf)

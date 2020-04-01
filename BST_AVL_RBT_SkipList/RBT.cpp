@@ -14,8 +14,8 @@ RBT::RBT()
 	nil->LCH = nil;
 	nil->RCH = nil;
 	this->nil = nil;
-	statChildPointerChange += 2;
-	statParentPointerChange++;
+	statPointerChange += 2;
+	statPointerChange++;
 }
 
 // Inserts a new value into the RBT Tree. If the value is already in the tree,
@@ -47,12 +47,12 @@ void RBT::Insert(const char* X)
 
 	if (Q == nil) // Empty tree? Make a new node (R) the root and exit!
 	{
-		
 		node* R = new node(X); // make and fill a node
 		R->LCH = R->RCH = nil; // leaf --> children point to nil
 		R->parent = nil; // point to the nil node
-		statChildPointerChange += 2;
-		statParentPointerChange++;
+		statPointerChange += 2;
+		statPointerChange++;
+		statRecoloring++;
 		root = R; // root was NULL, so R is new root
 		return; // This was the trivial case
 	}
@@ -66,12 +66,12 @@ void RBT::Insert(const char* X)
 	Z->RCH = nil; // ...as leaves, where RBT leaves' children point to nil
 	Z->parent = Q; // Y's parent is that last node we found before falling off the tree
 	Z->color = Color::red; // Color this node red for now (safe?)
-	statChildPointerChange++;
+	statPointerChange++;
 	// Will Y be Q's new left or right child?
 	if (strcmp(X, Q->data) < 0) Q->LCH = Z;
 	else Q->RCH = Z;
 	statKeyComparison++;
-	statChildPointerChange++;
+	statPointerChange++;
 
 	// Take care of any potential rule violations caused by this insertion
 	insert_fixup(Z);
@@ -99,8 +99,7 @@ void RBT::DisplayStatistics()
 	cout << "RBT_total_items=" << totalNodes << endl;
 	cout << "RBT_height=" << height << endl;
 	cout << "RBT_key_comparisons=" << statKeyComparison << endl;
-	cout << "RBT_child_pointer_changes=" << statChildPointerChange << endl;
-	cout << "RBT_parent_pointer_changes=" << statParentPointerChange << endl;
+	cout << "RBT_pointer_changes=" << statPointerChange << endl;
 	cout << "RBT_recolorings=" << statRecoloring << endl;
 	cout << "RBT_left_rotations=" << statleftRotation << endl;
 	cout << "RBT_right_rotations=" << statrightRotation << endl;
@@ -205,6 +204,7 @@ void RBT::insert_fixup(node* z)
 	} // end of cases
 
 	root->color = Color::black; // Takes care of the potential "rule 2" violation
+	statRecoloring++;
 }
 
 // Changes relevant pointers to nodes in the tree to reflect a left rotation around node x.
@@ -212,30 +212,30 @@ void RBT::left_rotate(node* x)
 {
 	node* y = x->RCH; // y points to x's right child
 	x->RCH = y->LCH; // x's right subtree becomes y's left
-	statChildPointerChange++;
+	statPointerChange++;
 	if (y->LCH != nil)
 	{
 		y->LCH->parent = x;
-		statParentPointerChange++;
+		statPointerChange++;
 	}
 	y->parent = x->parent; // link x's parent to y
-	statParentPointerChange++;
+	statPointerChange++;
 	if (x->parent == nil)
 		root = y;
 	else if (x == x->parent->LCH)
 	{
 		x->parent->LCH = y;
-		statChildPointerChange++;
+		statPointerChange++;
 	}
 	else 
 	{ 
 		x->parent->RCH = y;
-		statChildPointerChange++;
+		statPointerChange++;
 	}
 	y->LCH = x; // put x on y's left
-	statChildPointerChange++;
+	statPointerChange++;
 	x->parent = y;
-	statParentPointerChange++;
+	statPointerChange++;
 	statleftRotation++;
 }
 
@@ -244,30 +244,30 @@ void RBT::right_rotate(node* x)
 {
 	node* y = x->LCH; // y points to x's left child
 	x->LCH = y->RCH; // x's left subtree becomes y's right
-	statChildPointerChange++;
+	statPointerChange++;
 	if (y->RCH != nil)
 	{
 		y->RCH->parent = x;
-		statParentPointerChange++;
+		statPointerChange++;
 	}
 	y->parent = x->parent; // link x's parent to y
-	statParentPointerChange++;
+	statPointerChange++;
 	if (x->parent == nil)
 		root = y;
 	else if (x == x->parent->RCH)
 	{
 		x->parent->RCH = y;
-		statChildPointerChange++;
+		statPointerChange++;
 	}
 	else
 	{
 		x->parent->LCH = y;
-		statChildPointerChange++;
+		statPointerChange++;
 	}
 	y->RCH = x; // put x on y's right
-	statChildPointerChange++;
+	statPointerChange++;
 	x->parent = y;
-	statParentPointerChange++;
+	statPointerChange++;
 	statrightRotation++;
 }
 

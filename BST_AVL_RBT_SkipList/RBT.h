@@ -17,6 +17,7 @@ private:
 	int statKeyComparison = 0;
 	int statChildPointerChange = 0;
 	int statParentPointerChange = 0;
+	int statPointerChange = 0;
 	int statRecoloring = 0;
 	int statleftRotation = 0;
 	int statrightRotation = 0;
