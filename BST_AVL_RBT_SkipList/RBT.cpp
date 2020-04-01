@@ -22,7 +22,7 @@ RBT::RBT()
 // increment the count of the appropriate node by 1 and return.  Otherwise,
 // initialize a new node, find an appropriate place to insert it based on the 
 // value of its key, then fix any RBT violations caused by the insertion.
-void RBT::Insert(char X[50])
+void RBT::Insert(const char* X)
 {
 	node* P; // P will be used to scan through the tree until it falls off bottom. 
 	node* Q; // Q lags behind P, so it will be the parent of Y when P falls off.

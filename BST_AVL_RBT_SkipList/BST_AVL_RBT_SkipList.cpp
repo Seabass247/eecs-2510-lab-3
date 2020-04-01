@@ -140,39 +140,38 @@ int main()
 	RBT_T->DisplayStatistics();
 
 	cout << endl;
-
+	*/
 	SkipList* SL = new SkipList();
-	SL->Insert("A");
+	SL->Insert("D");
 	SL->Insert("A");
 	SL->Insert("B");
-	SL->Insert("C");
-	SL->Insert("D");
+	SL->Insert("A");
 	SL->Insert("E");
+	SL->Insert("V");
 	SL->Insert("F");
 	SL->Insert("G");
-	SL->Insert("H");
 	SL->Insert("I");
-	SL->Insert("J");
+	SL->Insert("H");
+	SL->Insert("N");
 	SL->Insert("K");
 	SL->Insert("L");
 	SL->Insert("M");
-	SL->Insert("N");
-	SL->Insert("O");
-	SL->Insert("O");
-	SL->Insert("P");
-	SL->Insert("Q");
 	SL->Insert("R");
+	SL->Insert("O");
+	SL->Insert("C");
+	SL->Insert("J");
+	SL->Insert("O");
+	SL->Insert("Q");
+	SL->Insert("V");
 	SL->Insert("S");
 	SL->Insert("T");
 	SL->Insert("U");
+	SL->Insert("P");
 	SL->Insert("V");
 	SL->Insert("V");
-	SL->Insert("V");
-	SL->Insert("V");
-	//SL->List();
+	SL->List();
 	SL->DisplayStatistics();
 	cout << endl;
-	*/
-
 	
+
 }

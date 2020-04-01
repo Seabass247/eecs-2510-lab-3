@@ -19,10 +19,15 @@ private:
 
 	struct node
 	{
-		const char* word;
+		char data[50] = { 0 };
 		int count = 1;
 		node* LCH = NULL;
 		node* RCH = NULL;
+
+		node(const char* word)
+		{
+			strcpy_s(data, word);
+		}
 	};
 
 	node* root = NULL;

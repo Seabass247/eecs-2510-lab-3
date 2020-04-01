@@ -9,7 +9,7 @@ public:
 	RBT();
 	~RBT();
 
-	void Insert(char X[50]);
+	void Insert(const char* word);
 	void List();
 	void DisplayStatistics();
 	int  TreeHeight();

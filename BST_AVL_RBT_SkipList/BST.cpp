@@ -63,8 +63,8 @@ void BST::Insert(const char* word)
 		// has exited, y refers to the very last valid node.
 		y = x;
 
+		int comparisonValue = strcmp(word, x->data);
 		statKeyComparison++;
-		int comparisonValue = strcmp(word, x->word);
 		// If the current node's key equals the word of the value we're
 		// trying to insert, just increment the count of the word and
 		// exit this function.
@@ -85,10 +85,9 @@ void BST::Insert(const char* word)
 	}
 	// The loop has exited. x was null, thus we followed a NULL pointer, and y is the leaf.
 	// Node z refers to the new node we're inserting into the tree. 
-	node* z = new node();
 	// z's initialized as a new default node with no word. Set z's key to the word
 	// we're inserting.
-	z->word = word;
+	node* z = new node(word);
 
 	// If y doesnt exist, it must be that the tree is still empty, therefore we
 	// should insert the new value in an empty tree by setting root (the first node)
@@ -96,11 +95,12 @@ void BST::Insert(const char* word)
 	if (y == NULL)
 	{
 		root = z;
+		statPointerChange++;
 	}
 	// Otherwise, the tree has at least one node y in it. Make new node z a child of y, 
 	// which implies setting z's parent to y as well. 
 	// Make z the left child if its word is less than its parents word.
-	else if (strcmp(word, y->word) < 0)
+	else if (strcmp(word, y->data) < 0)
 	{
 		statKeyComparison++;
 		statPointerChange++;
@@ -199,7 +199,7 @@ void BST::traverse_list(node* p, string& list)
 	if (p->LCH != NULL)
 		traverse_list(p->LCH, list);
 	// Append '<word> <count>,' to the list string.
-	list = list + p->word + " " + to_string(p->count) + ",";
+	list = list + p->data + " " + to_string(p->count) + ",";
 	// If p has a right child, traverse the right subtree.
 	if (p->RCH != NULL)
 		traverse_list(p->RCH, list);
