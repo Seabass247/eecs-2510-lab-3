@@ -24,6 +24,7 @@ private:
 	int statCase1 = 0;
 	int statCase2 = 0;
 	int statCase3 = 0;
+	int statnoFixup = 0;
 
 	enum class Color { red, black };
 	struct node

@@ -53,9 +53,12 @@ void RBT::Insert(const char* X)
 		statPointerChange += 2;
 		statPointerChange++;
 		statRecoloring++;
+		statnoFixup++;
 		root = R; // root was NULL, so R is new root
 		return; // This was the trivial case
 	}
+
+	
 	//
 	// At this point, P is nil, but Q points at the last node where X
 	// belongs (either as Q’s LCH or RCH, and Q points at an existing leaf)
@@ -73,6 +76,7 @@ void RBT::Insert(const char* X)
 	statKeyComparison++;
 	statPointerChange++;
 
+	statnoFixup++;
 	// Take care of any potential rule violations caused by this insertion
 	insert_fixup(Z);
 }
@@ -103,6 +107,7 @@ void RBT::DisplayStatistics()
 	cout << "RBT_recolorings=" << statRecoloring << endl;
 	cout << "RBT_left_rotations=" << statleftRotation << endl;
 	cout << "RBT_right_rotations=" << statrightRotation << endl;
+	cout << "RBT_no_fixup_required=" << statnoFixup << endl;
 	cout << "RBT_case_1_problems=" << statCase1 << endl;
 	cout << "RBT_case_2_problems=" << statCase2 << endl;
 	cout << "RBT_case_3_problems=" << statCase3 << endl;
@@ -144,6 +149,7 @@ int RBT::traverse_height(node* p)
 // function (z) that is a newly inserted node in the tree.
 void RBT::insert_fixup(node* z)
 {
+	bool statDidFixup = false;
 	while (z->parent->color == Color::red) // The following rules are only enforced where z's parent is red
 	{
 		if (z->parent == z->parent->parent->LCH) // is z's parent a left child of *its* parent?
@@ -200,11 +206,15 @@ void RBT::insert_fixup(node* z)
 				left_rotate(z->parent->parent); // Case 3
 				statCase3++;
 			}
+			
 		}
+		statDidFixup = true;
 	} // end of cases
 
 	root->color = Color::black; // Takes care of the potential "rule 2" violation
 	statRecoloring++;
+	if (statDidFixup)
+		statnoFixup--;
 }
 
 // Changes relevant pointers to nodes in the tree to reflect a left rotation around node x.

@@ -6,6 +6,8 @@
 #include <fstream>
 #include <time.h>
 
+const string filename = "Shakespeare.txt";
+
 // Returns the execution time of an operation that begins at 'start'
 // and ends at 'end' by calculating the difference between the two as
 // clock cycles taken during the period, and the cycles  are converted to secs by dividing
@@ -34,7 +36,8 @@ void parse()
 	{
 		start = clock();
 		bool IsDelimiter = false, WasDelimiter = false;
-		inFile.open("Shakespeare.txt", ios::binary);
+		string inFileName = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\" + filename;
+		inFile.open(inFileName, ios::binary);
 		if (inFile.fail())
 		{
 			cout << "Unable to open input file\n\n"
