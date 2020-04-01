@@ -149,7 +149,7 @@ void AVL::Insert(const char* X)
 			// Set the new BF’s at A and B, based on the BF at C.
 			switch (C->BF)
 			{
-			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
+			case 0: A->BF = B->BF = 0; statBFChange--; break; // A, B, & C's BFs all go to 0
 			case 1: B->BF = C->BF = 0; A->BF = -1; break; // B & C's BFs go to 0. A's goes to -1
 			case -1: A->BF = C->BF = 0; B->BF = 1; break; // A & C's BFs go to 0. B's goes to 1
 			default: statBFChange -= 3;
@@ -194,7 +194,7 @@ void AVL::Insert(const char* X)
 			// Set the new BF’s at A and B, based on the BF at C.
 			switch (C->BF)
 			{
-			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
+			case 0: A->BF = B->BF = 0; statBFChange--; break; // A, B, & C's BFs all go to 0
 			case -1: B->BF = C->BF = 0; A->BF = 1; break; // B & C's BFs go to 0. A's goes to -1
 			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to 1
 			default: statBFChange -= 3;
