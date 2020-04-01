@@ -30,7 +30,7 @@ void parse()
 	clock_t start, end;
 	
 	double overheadTime = 0;
-	for (int pass = 0; pass < 3; pass++)
+	for (int pass = 0; pass < 6; pass++)
 	{
 		start = clock();
 		bool IsDelimiter = false, WasDelimiter = false;
@@ -78,7 +78,10 @@ void parse()
 		if (pass == 1)
 			overheadTime = getExecutionTime(start, end);
 		else if (pass > 1)
+		{
 			cout << "Elapsed time: " << getExecutionTime(start, end) - overheadTime << " seconds" << endl;
+			cout << endl;
+		}
 	}
 
 }

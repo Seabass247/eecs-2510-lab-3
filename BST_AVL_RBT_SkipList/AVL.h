@@ -22,14 +22,20 @@ private:
 	int statRR = 0;
 	int statRL = 0;
 	int statNoRotation = 0;
+	int statAtoYPass = 0;
 
 	struct node
 	{
-		const char* data;
+		char data[50] = { 0 };
 		int count = 1;
 		int BF = 0;
 		node* LCH = NULL;
 		node* RCH = NULL;
+
+		node(const char* word)
+		{
+			strcpy_s(data, word);
+		}
 	};
 
 	node* root = NULL;

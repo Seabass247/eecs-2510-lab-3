@@ -26,11 +26,11 @@ void AVL::Insert(const char* X)
 
 	if (root == NULL)   // Empty tree? Make a root node and exit!
 	{
-		Y = new node;    // make and fill a node
-		Y->data = X;
+		Y = new node(X);    // make and fill a node
 		Y->LCH = Y->RCH = NULL;  // leaf --> no children
 		Y->BF = 0;     // it is, by definition, balanced
 		root = Y;        // root was NULL, so Y is new root
+		statPointerChange += 4;
 		return;          // This was the trivial case
 	}
 
@@ -60,8 +60,7 @@ void AVL::Insert(const char* X)
 	// At this point, P is NULL, but Q points at the last node where X
 	// belongs (either as Q’s LCH or RCH, and Q points at an existing leaf)
 	//
-	Y = new node;   // Make a new node
-	Y->data = X;    // Put our data (X) in it
+	Y = new node(X);   // Make a new node
 	Y->LCH = NULL; // New nodes are always inserted...
 	Y->RCH = NULL; // ...as leaves (i.e., no children)
 	Y->BF = 0;    // Leaves are always balanced by definition
@@ -70,7 +69,8 @@ void AVL::Insert(const char* X)
 	// Will Y be Q's new left or right child?
 	if (strcmp(X, Q->data) < 0) Q->LCH = Y;
 	else Q->RCH = Y;
-	
+	statPointerChange++;
+
 	//
 	// Detect (and fix, if we have) an imbalance
 	//
@@ -84,14 +84,17 @@ void AVL::Insert(const char* X)
 	statKeyComparison += 2;
 	if (strcmp(X, A->data) > 0) { B = P = A->RCH; d = -1; } // Which way is the displacement (d)
 	else { B = P = A->LCH; d = +1; } // B is identified as A’s child
-
+	
+	
 	while (P != Y)  // P is now one node below A.  Adjust from here to the
 	{               // insertion point.  Don’t do anything to new node (Y)
 		statKeyComparison++;
 		statBFChange++;
+		statAtoYBFChange++;
 		if (strcmp(X, P->data) > 0) { P->BF = -1; P = P->RCH; } // adjust BF and move forward
 		else { P->BF = +1; P = P->LCH; }
 	}
+	statAtoYPass++;
 
 	// Now we check the BF at A and see if we just pushed the tree INTO 
 	// BALANCE, into an “unacceptable IMBALANCE”, or if it is still
@@ -101,18 +104,16 @@ void AVL::Insert(const char* X)
 	{             // The insert pushed it to slight (acceptable) imbalance
 		A->BF = d;    // Set the BF to +/- 1 (displacement tells direction)
 		statBFChange++;
-		statAtoYBFChange++;
 		return;     // This is close enough to live with, so exit now
 	}
 
-	if (A->BF == -d) // If the tree had a slight imbalance the OTHER way, 
+	if (A->BF == -1*d) // If the tree had a slight imbalance the OTHER way, 
 	{               // then did the insertion throw the tree INTO complete
 		A->BF = 0;   // balance? If so, set the BF to zero and we’re done
 		statBFChange++;
-		statAtoYBFChange++;
-		return;      
+		return;
 	}
-
+	
 	// If we end up here, we took neither of the two returns just above, and the tree 
 	// is now UNACCEPTABLY IMBALANCED.
 	if (d == +1) // this is a left imbalance (left subtree too tall).  
@@ -129,7 +130,6 @@ void AVL::Insert(const char* X)
 
 			statPointerChange += 2;
 			statBFChange += 2;
-			statAtoYBFChange += 2;
 			statLL++;
 			statNoRotation--;
 		}
@@ -152,13 +152,13 @@ void AVL::Insert(const char* X)
 			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
 			case 1: B->BF = C->BF = 0; A->BF = -1; break; // B & C's BFs go to 0. A's goes to -1
 			case -1: A->BF = C->BF = 0; B->BF = 1; break; // A & C's BFs go to 0. B's goes to 1
+			default: statBFChange -= 3;
 			}
 
 			C->BF = 0; // Regardless, C is now balanced
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
 			statPointerChange += 4;
 			statBFChange += 3;
-			statAtoYBFChange += 3;
 			statLR++;
 			statNoRotation--;
 		} // end of else (LR Rotation)
@@ -175,7 +175,6 @@ void AVL::Insert(const char* X)
 			B->BF = 0;
 			statPointerChange += 2;
 			statBFChange += 2;
-			statAtoYBFChange += 2;
 			statRR++;
 			statNoRotation--;
 		}
@@ -198,13 +197,14 @@ void AVL::Insert(const char* X)
 			case 0: A->BF = B->BF = C->BF = 0; break; // A, B, & C's BFs all go to 0
 			case -1: B->BF = C->BF = 0; A->BF = 1; break; // B & C's BFs go to 0. A's goes to -1
 			case 1: A->BF = C->BF = 0; B->BF = -1; break; // A & C's BFs go to 0. B's goes to 1
+			default: statBFChange -= 3;
 			}
-			statBFChange += 3;
-			statAtoYBFChange += 3;
-			statRL++;
-			statNoRotation--;
+
 			C->BF = 0; // Regardless, C is now balanced
 			B = C;     // B is the root of the now-rebalanced subtree (recycle)
+			statBFChange += 3;
+			statRL++;
+			statNoRotation--;
 		} // end of else (RL Rotation)
 	} // end of "if (d = -1)"
 
@@ -295,6 +295,7 @@ void AVL::DisplayStatistics()
 	cout << "AVL_child_pointer_changes=" << statPointerChange << endl;
 	cout << "AVL_BF_changes=" << statBFChange << endl;
 	cout << "AVL_A_to_Y_BF_changes=" << statAtoYBFChange << endl;
+	cout << "AVL_A_to_Y_passes=" << statAtoYPass << endl;
 	cout << "AVL_LL_rotations=" << statLL << endl;
 	cout << "AVL_LR_rotations=" << statLR << endl;
 	cout << "AVL_RR_rotations=" << statRR << endl;

@@ -36,17 +36,18 @@ void RBT::Insert(char X[50])
 	while (P != nil && P != NULL) // search tree for insertion point
 	{
 		int comparisonValue = strcmp(X, P->data);
+		statKeyComparison++;
 		if (comparisonValue == 0) {
 			P->count++;
 			return;  // ALREADY HERE!
 		}
 		Q = P; // Bring Q up to where P is
 		P = (comparisonValue < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
-		statKeyComparison++;
 	}
 
 	if (Q == nil) // Empty tree? Make a new node (R) the root and exit!
 	{
+		
 		node* R = new node(X); // make and fill a node
 		R->LCH = R->RCH = nil; // leaf --> children point to nil
 		R->parent = nil; // point to the nil node
