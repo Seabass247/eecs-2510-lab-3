@@ -43,6 +43,7 @@ void AVL::Insert(const char* X)
 	while (P != NULL) // search tree for insertion point
 	{
 		int comparisonValue = strcmp(X, P->data);
+		statKeyComparison++;
 		if (comparisonValue == 0) {
 			P->count++;
 			return;  // ALREADY HERE!
@@ -53,7 +54,6 @@ void AVL::Insert(const char* X)
 		}  // a non-zero BF (and its parent)
 		Q = P;                               // Bring Q up to where P is
 		P = (comparisonValue < 0) ? P->LCH : P->RCH; // and then advance P (based on BST rule to go L or R).
-		statKeyComparison++;
 	}
 
 	//
@@ -81,7 +81,7 @@ void AVL::Insert(const char* X)
 	//
 	// If X is inserted in the LEFT subtree of A, then d = +1 (d = -1 means
 	// we inserted X in the RIGHT subtree of A.
-	statKeyComparison += 2;
+	statKeyComparison++;
 	if (strcmp(X, A->data) > 0) { B = P = A->RCH; d = -1; } // Which way is the displacement (d)
 	else { B = P = A->LCH; d = +1; } // B is identified as A’s child
 	
@@ -283,19 +283,19 @@ int AVL::TreeHeight()
 void AVL::DisplayStatistics()
 {
 	int height = TreeHeight();
-	int distinctNodes = 0;
-	int totalNodes = 0;
+	int distinctCount = 0;
+	int totalCount = 0;
 	if (root != NULL)
-		traverse(root, distinctNodes, totalNodes);
+		traverse(root, distinctCount, totalCount);
 
-	cout << "AVL_distinct_items=" << distinctNodes << endl;
-	cout << "AVL_total_items=" << totalNodes << endl;
+	cout << "AVL_distinct_words=" << distinctCount << endl;
+	cout << "AVL_total_words=" << totalCount << endl;
 	cout << "AVL_height=" << height << endl;
-	cout << "AVL_key_comparisons=" << statKeyComparison << endl;
-	cout << "AVL_child_pointer_changes=" << statPointerChange << endl;
+	cout << "AVL_pointer_changes=" << statPointerChange << endl;
 	cout << "AVL_BF_changes=" << statBFChange << endl;
 	cout << "AVL_A_to_Y_BF_changes=" << statAtoYBFChange << endl;
 	cout << "AVL_A_to_Y_passes=" << statAtoYPass << endl;
+	cout << "AVL_key_comparisons=" << statKeyComparison << endl;
 	cout << "AVL_LL_rotations=" << statLL << endl;
 	cout << "AVL_LR_rotations=" << statLR << endl;
 	cout << "AVL_RR_rotations=" << statRR << endl;

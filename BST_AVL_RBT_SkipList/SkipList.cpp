@@ -164,17 +164,17 @@ void SkipList::List()
 void SkipList::DisplayStatistics()
 {
 	int height = getListHeight();
-	int distinctWord = 0;
+	int distinctCount = 0;
 	int totalNodes = 0;
 	int totalWords = 0;
 	int* nodesInlevel = new int[height];
-	traverse(distinctWord, totalNodes, totalWords, nodesInlevel);
-	int fastLaneNodes = totalNodes - distinctWord;
+	traverse(distinctCount, totalNodes, totalWords, nodesInlevel);
+	int fastLaneNodes = totalNodes - distinctCount;
 
-	cout << "SkipList_slow_lane_nodes=" << distinctWord << endl;
+	cout << "SkipList_slow_lane_nodes=" << distinctCount << endl;
 	cout << "SkipList_fast_lane_nodes=" << fastLaneNodes << endl;
 	cout << "SkipList_height=" << height << endl;
-	cout << "SkipList_distinct_words=" << distinctWord << endl;
+	cout << "SkipList_distinct_words=" << distinctCount << endl;
 	cout << "SkipList_total_words=" << totalWords << endl;
 	cout << "SkipList_total_list_nodes=" << totalNodes << endl;
 	cout << "SkipList_key_comparisons=" << statKeyComparison << endl;
