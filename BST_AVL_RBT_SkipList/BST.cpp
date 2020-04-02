@@ -57,13 +57,14 @@ void BST::Insert(const char* word)
 	// parent of the new node).  If at any point the current node in the search
 	// contains a key equal to <word>, output the node's key and count and exit
 	// this funciton.
+	int comparisonValue;
 	while (x != NULL)
 	{
 		// y lags one step behind x, so that if x is null and the loop
 		// has exited, y refers to the very last valid node.
 		y = x;
 
-		int comparisonValue = strcmp(word, x->data);
+		comparisonValue = strcmp(word, x->data);
 		statKeyComparison++;
 		// If the current node's key equals the word of the value we're
 		// trying to insert, just increment the count of the word and
@@ -100,17 +101,15 @@ void BST::Insert(const char* word)
 	// Otherwise, the tree has at least one node y in it. Make new node z a child of y, 
 	// which implies setting z's parent to y as well. 
 	// Make z the left child if its word is less than its parents word.
-	else if (strcmp(word, y->data) < 0)
+	else if (comparisonValue < 0)
 	{
-		statKeyComparison++;
-		statPointerChange++;
 		y->LCH = z;
+		statPointerChange++;
 	}
 	// Otherwise it's greater and should be the right child.
 	else {
-		statKeyComparison++;
-		statPointerChange++;
 		y->RCH = z;
+		statPointerChange++;
 	}
 }
 

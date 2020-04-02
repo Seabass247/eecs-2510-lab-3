@@ -41,7 +41,8 @@ void SkipList::Insert(char X[50])
 
 	p->right->left = Y;
 	p->right = Y;
-	
+	statPointerChange += 2;
+
 	int level = 1;
 	while (coin() & 1) // Approximately half the time, create a node in the level above
 	{
@@ -101,7 +102,6 @@ void SkipList::Insert(char X[50])
 		statPointerChange += 3;
 
 		Y = Z; // remember Z next time as Y 
-		statPointerChange++;
 	}
 
 	n++; // one more entry in the list
@@ -115,7 +115,7 @@ SkipList::SkipListNode* SkipList::search(const char* X, bool& found)
 	while (true) // Repeat until we return out of the loop
 	{
 		compareValue = strcmp(X, P->right->key);
-		statKeyComparison++;
+		statKeyComparison++; 
 		if (compareValue == 0)
 		{
 			P = P->right;
