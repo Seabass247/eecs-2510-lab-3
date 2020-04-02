@@ -6,7 +6,9 @@
 #include <fstream>
 #include <time.h>
 
-const string filename = "Shakespeare.txt";
+const string DIRECTORY = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\";
+
+const string FILENAME = "Shakespeare.txt"; // The name of the file the parser will take input from.
 
 // Returns the execution time of an operation that begins at 'start'
 // and ends at 'end' by calculating the difference between the two as
@@ -17,7 +19,7 @@ double getExecutionTime(clock_t start, clock_t end)
 	return double(end - start) / double(CLOCKS_PER_SEC);
 }
 
-void parse()
+void parse(string filename)
 {
 	char c;
 	RBT* RBT_T = new RBT(); // instantiate each of the trees
@@ -32,12 +34,12 @@ void parse()
 	clock_t start, end;
 	
 	double overheadTime = 0;
+	cout << "INPUT_FILE=\"" << filename << "\"" << endl << endl;
 	for (int pass = 0; pass < 6; pass++)
 	{
 		start = clock();
 		bool IsDelimiter = false, WasDelimiter = false;
-		string inFileName = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\" + filename;
-		inFile.open(inFileName, ios::binary);
+		inFile.open(filename, ios::binary);
 		if (inFile.fail())
 		{
 			cout << "Unable to open input file\n\n"
@@ -89,92 +91,17 @@ void parse()
 
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-	parse();
-	/*
-	AVL* AVL_T = new AVL();
-	AVL_T->Insert("A");
-	AVL_T->Insert("B");
-	AVL_T->Insert("C");
-	AVL_T->Insert("C");
-	AVL_T->Insert("C");
-	AVL_T->Insert("C");
-	AVL_T->Insert("C");
-	AVL_T->Insert("C");
-	AVL_T->Insert("C");
-	AVL_T->Insert("D");
-	AVL_T->Insert("E");
-	//AVL_T->List();
-	AVL_T->DisplayStatistics();
-
-	cout << endl;
-
-	BST* BST_T = new BST();
-	BST_T->Insert("A");
-	BST_T->Insert("B");
-	BST_T->Insert("C");
-	BST_T->Insert("C");
-	BST_T->Insert("C");
-	BST_T->Insert("C");
-	BST_T->Insert("C");
-	BST_T->Insert("C");
-	BST_T->Insert("C");
-	BST_T->Insert("D");
-	BST_T->Insert("E");
-	//BST_T->List();
-	BST_T->DisplayStatistics();
-
-	cout << endl;
-
-	RBT* RBT_T = new RBT();
-	RBT_T->Insert("E");
-	RBT_T->Insert("D");
-	RBT_T->Insert("C");
-	RBT_T->Insert("C");
-	RBT_T->Insert("C");
-	RBT_T->Insert("C");
-	RBT_T->Insert("C");
-	RBT_T->Insert("C");
-	RBT_T->Insert("C");
-	RBT_T->Insert("A");
-	RBT_T->Insert("B");
-	//RBT_T->List();
-	RBT_T->DisplayStatistics();
-
-	cout << endl;
-	*/
-	//SkipList* SL = new SkipList();
-	//SL->Insert("D");
-	//SL->Insert("A");
-	//SL->Insert("B");
-	//SL->Insert("A");
-	//SL->Insert("E");
-	//SL->Insert("V");
-	//SL->Insert("F");
-	//SL->Insert("G");
-	//SL->Insert("I");
-	//SL->Insert("H");
-	//SL->Insert("N");
-	//SL->Insert("K");
-	//SL->Insert("L");
-	//SL->Insert("M");
-	//SL->Insert("R");
-	//SL->Insert("O");
-	//SL->Insert("C");
-	//SL->Insert("J");
-	//SL->Insert("O");
-	//SL->Insert("Q");
-	//SL->Insert("V");
-	//SL->Insert("S");
-	//SL->Insert("T");
-	//SL->Insert("U");
-	//SL->Insert("P");
-	//SL->Insert("V");
-	//SL->Insert("V");
-	//SL->List();
-	//SL->DisplayStatistics();
-	//cout << endl;
+	// Parse the file as supplied to the program as the first argument...
+	if (argc == 2)
+	{
+		string file = (string)argv[1];
+		parse(file);
+	} // ...else use the constant filename and path string provided at the top
+	else
+	{
+		parse(DIRECTORY + FILENAME);
+	}
 	
-
 }
