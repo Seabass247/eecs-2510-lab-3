@@ -1,0 +1,65 @@
+INPUT_FILE="Les Miserables - Hugo.txt"
+
+RBT_distinct_items=26132
+RBT_total_items=574973
+RBT_height=18
+RBT_key_comparisons=6528870
+RBT_pointer_changes=136458
+RBT_recolorings=88168
+RBT_left_rotations=8046
+RBT_right_rotations=7896
+RBT_no_fixup_required=9444
+RBT_case_1_problems=13552
+RBT_case_2_problems=5252
+RBT_case_3_problems=10690
+Elapsed time: 0.071 seconds
+
+AVL_distinct_words=26132
+AVL_total_words=574973
+AVL_height=18
+AVL_pointer_changes=77083
+AVL_BF_changes=88770
+AVL_A_to_Y_BF_changes=47287
+AVL_A_to_Y_passes=26131
+AVL_key_comparisons=6636042
+AVL_LL_rotations=3220
+AVL_LR_rotations=3138
+AVL_RR_rotations=3288
+AVL_RL_rotations=3147
+AVL_no_rotation_needed=13339
+Elapsed time: 0.098 seconds
+
+BST_distinct_items=26132
+BST_total_items=574973
+BST_height=39
+BST_child_pointer_changes=26132
+BST_key_comparisons=8239662
+Elapsed time: 0.049 seconds
+
+SkipList_slow_lane_nodes=26132
+SkipList_fast_lane_nodes=26264
+SkipList_height=18
+SkipList_distinct_nodes=26132
+SkipList_total_words=574973
+SkipList_total_nodes=52396
+SkipList_key_comparisons=14367852
+SkipList_pointer_changes=131175
+SkipList_nodes_lane_1=1
+SkipList_nodes_lane_2=1
+SkipList_nodes_lane_3=1
+SkipList_nodes_lane_4=1
+SkipList_nodes_lane_5=1
+SkipList_nodes_lane_6=4
+SkipList_nodes_lane_7=9
+SkipList_nodes_lane_8=26
+SkipList_nodes_lane_9=46
+SkipList_nodes_lane_10=99
+SkipList_nodes_lane_11=202
+SkipList_nodes_lane_12=414
+SkipList_nodes_lane_13=836
+SkipList_nodes_lane_14=1664
+SkipList_nodes_lane_15=3334
+SkipList_nodes_lane_16=6567
+SkipList_nodes_lane_17=13058
+SkipList_nodes_lane_18=26132
+Elapsed time: 0.153 seconds

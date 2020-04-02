@@ -33,9 +33,10 @@ void RBT::Insert(const char* X)
 	Q = nil; // Q lags behind P so it starts NULL
 	P = root; // P starts at the root
 	
+	int comparisonValue;
 	while (P != nil && P != NULL) // search tree for insertion point
 	{
-		int comparisonValue = strcmp(X, P->data);
+		comparisonValue = strcmp(X, P->data);
 		statKeyComparison++;
 		if (comparisonValue == 0) {
 			P->count++;
@@ -64,16 +65,14 @@ void RBT::Insert(const char* X)
 	// belongs (either as Q’s LCH or RCH, and Q points at an existing leaf)
 	//
 	node* Z = new node(X);   // Make a new node (Z) to be inserted
-	//Z->data = *X;    // Put our data (X) in it
 	Z->LCH = nil; // New nodes are always inserted...
 	Z->RCH = nil; // ...as leaves, where RBT leaves' children point to nil
 	Z->parent = Q; // Y's parent is that last node we found before falling off the tree
 	Z->color = Color::red; // Color this node red for now (safe?)
 	statPointerChange++;
 	// Will Y be Q's new left or right child?
-	if (strcmp(X, Q->data) < 0) Q->LCH = Z;
+	if (comparisonValue < 0) Q->LCH = Z;
 	else Q->RCH = Z;
-	statKeyComparison++;
 	statPointerChange++;
 
 	statnoFixup++;
@@ -99,8 +98,8 @@ void RBT::DisplayStatistics()
 	if (root != NULL)
 		traverse(root, distinctNodes, totalNodes);
 
-	cout << "RBT_distinct_items=" << distinctNodes << endl;
-	cout << "RBT_total_items=" << totalNodes << endl;
+	cout << "RBT_distinct_words=" << distinctNodes << endl;
+	cout << "RBT_total_words=" << totalNodes << endl;
 	cout << "RBT_height=" << height << endl;
 	cout << "RBT_key_comparisons=" << statKeyComparison << endl;
 	cout << "RBT_pointer_changes=" << statPointerChange << endl;

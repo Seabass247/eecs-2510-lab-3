@@ -1,0 +1,63 @@
+INPUT_FILE="Middlemarch - Eliot.txt"
+
+RBT_distinct_items=16313
+RBT_total_items=323792
+RBT_height=17
+RBT_key_comparisons=3468134
+RBT_pointer_changes=84345
+RBT_recolorings=54918
+RBT_left_rotations=4965
+RBT_right_rotations=4832
+RBT_no_fixup_required=5909
+RBT_case_1_problems=8481
+RBT_case_2_problems=3216
+RBT_case_3_problems=6581
+Elapsed time: 0.028 seconds
+
+AVL_distinct_words=16313
+AVL_total_words=323792
+AVL_height=17
+AVL_pointer_changes=47855
+AVL_BF_changes=55187
+AVL_A_to_Y_BF_changes=29372
+AVL_A_to_Y_passes=16312
+AVL_key_comparisons=3504800
+AVL_LL_rotations=1977
+AVL_LR_rotations=2030
+AVL_RR_rotations=2059
+AVL_RL_rotations=1858
+AVL_no_rotation_needed=8389
+Elapsed time: 0.034 seconds
+
+BST_distinct_items=16313
+BST_total_items=323792
+BST_height=51
+BST_child_pointer_changes=16313
+BST_key_comparisons=4591952
+Elapsed time: 0.038 seconds
+
+SkipList_slow_lane_nodes=16313
+SkipList_fast_lane_nodes=16340
+SkipList_height=16
+SkipList_distinct_nodes=16313
+SkipList_total_words=323792
+SkipList_total_nodes=32653
+SkipList_key_comparisons=8191639
+SkipList_pointer_changes=81751
+SkipList_nodes_lane_1=1
+SkipList_nodes_lane_2=2
+SkipList_nodes_lane_3=3
+SkipList_nodes_lane_4=6
+SkipList_nodes_lane_5=9
+SkipList_nodes_lane_6=12
+SkipList_nodes_lane_7=28
+SkipList_nodes_lane_8=53
+SkipList_nodes_lane_9=130
+SkipList_nodes_lane_10=263
+SkipList_nodes_lane_11=540
+SkipList_nodes_lane_12=1078
+SkipList_nodes_lane_13=2104
+SkipList_nodes_lane_14=4025
+SkipList_nodes_lane_15=8086
+SkipList_nodes_lane_16=16313
+Elapsed time: 0.13 seconds

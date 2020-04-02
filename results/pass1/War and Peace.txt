@@ -1,0 +1,64 @@
+INPUT_FILE="War and Peace.txt"
+
+RBT_distinct_items=19104
+RBT_total_items=573410
+RBT_height=17
+RBT_key_comparisons=5939323
+RBT_pointer_changes=98989
+RBT_recolorings=64303
+RBT_left_rotations=5816
+RBT_right_rotations=5706
+RBT_no_fixup_required=6907
+RBT_case_1_problems=9921
+RBT_case_2_problems=3804
+RBT_case_3_problems=7718
+Elapsed time: 0.095 seconds
+
+AVL_distinct_words=19104
+AVL_total_words=573410
+AVL_height=17
+AVL_pointer_changes=56277
+AVL_BF_changes=64732
+AVL_A_to_Y_BF_changes=34426
+AVL_A_to_Y_passes=19103
+AVL_key_comparisons=5964430
+AVL_LL_rotations=2267
+AVL_LR_rotations=2289
+AVL_RR_rotations=2461
+AVL_RL_rotations=2309
+AVL_no_rotation_needed=9778
+Elapsed time: 0.099 seconds
+
+BST_distinct_items=19104
+BST_total_items=573410
+BST_height=63
+BST_child_pointer_changes=19104
+BST_key_comparisons=20946543
+Elapsed time: 0.126 seconds
+
+SkipList_slow_lane_nodes=19104
+SkipList_fast_lane_nodes=18797
+SkipList_height=17
+SkipList_distinct_nodes=19104
+SkipList_total_words=573410
+SkipList_total_nodes=37901
+SkipList_key_comparisons=15804104
+SkipList_pointer_changes=94711
+SkipList_nodes_lane_1=1
+SkipList_nodes_lane_2=1
+SkipList_nodes_lane_3=1
+SkipList_nodes_lane_4=4
+SkipList_nodes_lane_5=6
+SkipList_nodes_lane_6=12
+SkipList_nodes_lane_7=21
+SkipList_nodes_lane_8=39
+SkipList_nodes_lane_9=74
+SkipList_nodes_lane_10=152
+SkipList_nodes_lane_11=290
+SkipList_nodes_lane_12=580
+SkipList_nodes_lane_13=1168
+SkipList_nodes_lane_14=2342
+SkipList_nodes_lane_15=4668
+SkipList_nodes_lane_16=9438
+SkipList_nodes_lane_17=19104
+Elapsed time: 0.22 seconds

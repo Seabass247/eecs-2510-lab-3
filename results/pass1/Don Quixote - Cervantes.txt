@@ -1,0 +1,61 @@
+INPUT_FILE="Don Quixote - Cervantes.txt"
+
+RBT_distinct_items=17195
+RBT_total_items=430499
+RBT_height=17
+RBT_key_comparisons=4531755
+RBT_pointer_changes=90424
+RBT_recolorings=58002
+RBT_left_rotations=5350
+RBT_right_rotations=5269
+RBT_no_fixup_required=6135
+RBT_case_1_problems=8887
+RBT_case_2_problems=3546
+RBT_case_3_problems=7073
+Elapsed time: 0.051 seconds
+
+AVL_distinct_words=17195
+AVL_total_words=430499
+AVL_height=17
+AVL_pointer_changes=50933
+AVL_BF_changes=58347
+AVL_A_to_Y_BF_changes=31040
+AVL_A_to_Y_passes=17194
+AVL_key_comparisons=4482228
+AVL_LL_rotations=2032
+AVL_LR_rotations=2095
+AVL_RR_rotations=2231
+AVL_RL_rotations=2095
+AVL_no_rotation_needed=8742
+Elapsed time: 0.041 seconds
+
+BST_distinct_items=17195
+BST_total_items=430499
+BST_height=40
+BST_child_pointer_changes=17195
+BST_key_comparisons=6403392
+Elapsed time: 0.071 seconds
+
+SkipList_slow_lane_nodes=17195
+SkipList_fast_lane_nodes=17102
+SkipList_height=14
+SkipList_distinct_nodes=17195
+SkipList_total_words=430499
+SkipList_total_nodes=34297
+SkipList_key_comparisons=10551646
+SkipList_pointer_changes=85787
+SkipList_nodes_lane_1=1
+SkipList_nodes_lane_2=3
+SkipList_nodes_lane_3=7
+SkipList_nodes_lane_4=16
+SkipList_nodes_lane_5=37
+SkipList_nodes_lane_6=74
+SkipList_nodes_lane_7=134
+SkipList_nodes_lane_8=270
+SkipList_nodes_lane_9=553
+SkipList_nodes_lane_10=1087
+SkipList_nodes_lane_11=2136
+SkipList_nodes_lane_12=4250
+SkipList_nodes_lane_13=8534
+SkipList_nodes_lane_14=17195
+Elapsed time: 0.115 seconds

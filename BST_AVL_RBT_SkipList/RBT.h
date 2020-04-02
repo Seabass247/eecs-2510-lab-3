@@ -7,8 +7,6 @@ class RBT
 {
 public:
 	RBT();
-	~RBT();
-
 	void Insert(const char* word);
 	void List();
 	void DisplayStatistics();

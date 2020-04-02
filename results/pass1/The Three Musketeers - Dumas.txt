@@ -1,0 +1,60 @@
+INPUT_FILE="The Three Musketeers - Dumas.txt"
+
+RBT_distinct_items=11407
+RBT_total_items=233331
+RBT_height=17
+RBT_key_comparisons=2402427
+RBT_pointer_changes=60296
+RBT_recolorings=38690
+RBT_left_rotations=3573
+RBT_right_rotations=3527
+RBT_no_fixup_required=4044
+RBT_case_1_problems=5951
+RBT_case_2_problems=2385
+RBT_case_3_problems=4715
+Elapsed time: 0.021 seconds
+
+AVL_distinct_words=11407
+AVL_total_words=233331
+AVL_height=16
+AVL_pointer_changes=33941
+AVL_BF_changes=38715
+AVL_A_to_Y_BF_changes=20591
+AVL_A_to_Y_passes=11406
+AVL_key_comparisons=2360102
+AVL_LL_rotations=1379
+AVL_LR_rotations=1417
+AVL_RR_rotations=1432
+AVL_RL_rotations=1404
+AVL_no_rotation_needed=5775
+Elapsed time: 0.021 seconds
+
+BST_distinct_items=11407
+BST_total_items=233331
+BST_height=39
+BST_child_pointer_changes=11407
+BST_key_comparisons=3320733
+Elapsed time: 0.026 seconds
+
+SkipList_slow_lane_nodes=11407
+SkipList_fast_lane_nodes=11392
+SkipList_height=13
+SkipList_distinct_nodes=11407
+SkipList_total_words=233331
+SkipList_total_nodes=22799
+SkipList_key_comparisons=5403854
+SkipList_pointer_changes=57074
+SkipList_nodes_lane_1=1
+SkipList_nodes_lane_2=3
+SkipList_nodes_lane_3=9
+SkipList_nodes_lane_4=14
+SkipList_nodes_lane_5=40
+SkipList_nodes_lane_6=82
+SkipList_nodes_lane_7=171
+SkipList_nodes_lane_8=355
+SkipList_nodes_lane_9=690
+SkipList_nodes_lane_10=1454
+SkipList_nodes_lane_11=2837
+SkipList_nodes_lane_12=5736
+SkipList_nodes_lane_13=11407
+Elapsed time: 0.053 seconds

@@ -6,7 +6,7 @@
 #include <fstream>
 #include <time.h>
 
-const string DIRECTORY = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\";
+const string DIRECTORY = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\variety\\";
 
 const string FILENAME = "Shakespeare.txt"; // The name of the file the parser will take input from.
 
@@ -103,5 +103,4 @@ int main(int argc, char* argv[])
 	{
 		parse(DIRECTORY + FILENAME);
 	}
-	
 }

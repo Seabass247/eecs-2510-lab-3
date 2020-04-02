@@ -1,0 +1,64 @@
+INPUT_FILE="Bleak House - Dickens.txt"
+
+RBT_distinct_items=16387
+RBT_total_items=362309
+RBT_height=17
+RBT_key_comparisons=3722115
+RBT_pointer_changes=84588
+RBT_recolorings=54851
+RBT_left_rotations=4876
+RBT_right_rotations=4949
+RBT_no_fixup_required=6002
+RBT_case_1_problems=8460
+RBT_case_2_problems=3283
+RBT_case_3_problems=6542
+Elapsed time: 0.023 seconds
+
+AVL_distinct_words=16387
+AVL_total_words=362309
+AVL_height=17
+AVL_pointer_changes=47399
+AVL_BF_changes=55160
+AVL_A_to_Y_BF_changes=29500
+AVL_A_to_Y_passes=16386
+AVL_key_comparisons=3683245
+AVL_LL_rotations=2004
+AVL_LR_rotations=1904
+AVL_RR_rotations=2009
+AVL_RL_rotations=1891
+AVL_no_rotation_needed=8579
+Elapsed time: 0.04 seconds
+
+BST_distinct_items=16387
+BST_total_items=362309
+BST_height=42
+BST_child_pointer_changes=16387
+BST_key_comparisons=4778346
+Elapsed time: 0.043 seconds
+
+SkipList_slow_lane_nodes=16387
+SkipList_fast_lane_nodes=16396
+SkipList_height=16
+SkipList_distinct_nodes=16387
+SkipList_total_words=362309
+SkipList_total_nodes=32783
+SkipList_key_comparisons=9295996
+SkipList_pointer_changes=82067
+SkipList_nodes_lane_1=1
+SkipList_nodes_lane_2=3
+SkipList_nodes_lane_3=3
+SkipList_nodes_lane_4=4
+SkipList_nodes_lane_5=6
+SkipList_nodes_lane_6=17
+SkipList_nodes_lane_7=27
+SkipList_nodes_lane_8=58
+SkipList_nodes_lane_9=125
+SkipList_nodes_lane_10=258
+SkipList_nodes_lane_11=518
+SkipList_nodes_lane_12=1037
+SkipList_nodes_lane_13=2044
+SkipList_nodes_lane_14=4058
+SkipList_nodes_lane_15=8237
+SkipList_nodes_lane_16=16387
+Elapsed time: 0.127 seconds
+
