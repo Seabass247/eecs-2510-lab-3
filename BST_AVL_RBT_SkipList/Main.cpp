@@ -15,9 +15,9 @@
 const string DIRECTORY = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\variety\\"; // Sets the directory that the file to be parsed is in.
 const string FILENAME = "Shakespeare.txt"; // The name of the file the parser will take input from.
 
-// Returns the execution time of an operation that begins at 'start'
-// and ends at 'end' by calculating the difference between the two as
-// clock cycles taken during the period, and the cycles  are converted to secs by dividing
+// Returns the elapsed time of an operation that begins at the time of 'start'
+// and ends at the time of 'end' by calculating the difference between the two as
+// clock cycles taken during the period, and the cycles are converted to secs by dividing
 // by CLOCKS_PER_SEC.
 double getExecutionTime(clock_t start, clock_t end)
 {
@@ -48,7 +48,7 @@ void parse(string filename)
 
 	for (int pass = 0; pass < 6; pass++)
 	{
-		start = clock();
+		start = clock(); // start the timer that measures total elapsed time
 		bool IsDelimiter = false, WasDelimiter = false;
 		inFile.open(filename, ios::binary);
 		if (inFile.fail())
@@ -82,7 +82,8 @@ void parse(string filename)
 			inFile.get(c);
 		}
 		inFile.close();
-		end = clock();
+		end = clock(); // stop the timer that measures total elapsed time
+
 		// If the file doesn't end with a delimiter, it will leave the last word unprocessed.
 		// Insert once more, and display the statistics for this structure...
 		//
@@ -93,7 +94,7 @@ void parse(string filename)
 		else if (pass == 5) { if (strlen(chari)) SL->Insert(chari); SL->DisplayStatistics(); } // skip list
 
 		if (pass == 1)
-			overheadTime = getExecutionTime(start, end);
+			overheadTime = getExecutionTime(start, end); // get the total elapsed time of the intial pass
 		else if (pass > 1)
 		{
 			cout << "Elapsed time (sec)," << getExecutionTime(start, end) - overheadTime << endl;
