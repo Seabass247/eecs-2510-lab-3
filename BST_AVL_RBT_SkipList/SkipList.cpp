@@ -1,3 +1,9 @@
+// SkipList.cpp
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the implementation of the SkipList class. Enables the Skip List to have words inserted and exposes the 
+// resulting statistics via DisplayStatistics.
 #include "SkipList.h"
 #include <stdlib.h>
 #include <time.h>
@@ -6,6 +12,7 @@
 
 using namespace std;
 
+// The Skip List's constructor. Configures a new Skip List where the head and tail are sentinel nodes
 SkipList::SkipList()
 {
 	head = new SkipListNode(); // create the negative infinity sentinel node
@@ -19,11 +26,13 @@ SkipList::SkipList()
 	coin = mt19937(time(NULL)); // seed the RNG with a unique seed as to generate new "random" sequences every time
 }
 
-void SkipList::Insert(char X[50])
+// Inserts X into the list. It might randomly create more than one node in the list in a single insertion
+// to put the new node into the "fast lanes."
+void SkipList::Insert(const char* X)
 {
 	bool found = false;
-	SkipListNode* p = search(X, found);
-
+	SkipListNode* p = search(X, found); // let p point to either the node with key X or the node with the next highest key value...
+										// ...before X
 	if (found) // The node is already in the tree, increment its count
 	{
 		p->count++;
@@ -43,9 +52,13 @@ void SkipList::Insert(char X[50])
 	p->right = Y;
 	statPointerChange += 2;
 
+
+	statTossedCoin++;
 	int level = 1;
 	while (coin() & 1) // Approximately half the time, create a node in the level above
 	{
+		statTossedCoin++;
+		statTossedHeads++;
 		level++; // one more level has been added to the list
 
 		if (level > h)
@@ -75,7 +88,6 @@ void SkipList::Insert(char X[50])
 
 			// END adding new layer
 			h++;
-
 		}
 
 		// Find first element with an up pointer
@@ -107,6 +119,9 @@ void SkipList::Insert(char X[50])
 	n++; // one more entry in the list
 }
 
+// Traverses the list iteratively starting from the top, searching for the node with the same 
+// value as X, setting found = true if X is found, otherwise returns the next highest value node
+// before X and sets found = false.
 SkipList::SkipListNode* SkipList::search(const char* X, bool& found)
 {
 	SkipListNode* P = head; // P starts at the head
@@ -140,6 +155,8 @@ SkipList::SkipListNode* SkipList::search(const char* X, bool& found)
 		P = P->down;
 	}
 }
+
+// Outputs the nodes in the list in every level for debug purposes.
 void SkipList::List()
 {
 	cout << "SkipList contains: " << endl;
@@ -161,32 +178,42 @@ void SkipList::List()
 	cout << endl;
 }
 
+// Outputs the Skip List's statistics in comma-separated values (CSV)
+// Gets the height via getListHeight, node counts via Traverse, and every other metric
+// via class-wide variables.
 void SkipList::DisplayStatistics()
 {
-	int height = getListHeight();
+	int height = getListHeight(); // get the list height found by a traversal
 	int distinctCount = 0;
 	int totalNodes = 0;
 	int totalWords = 0;
-	int* nodesInlevel = new int[height];
+	int* nodesInlevel = new int[height]; // used to store the number of nodes in every level of the list
 	traverse(distinctCount, totalNodes, totalWords, nodesInlevel);
 	int fastLaneNodes = totalNodes - distinctCount;
 
-	cout << "SkipList_slow_lane_nodes=" << distinctCount << endl;
-	cout << "SkipList_fast_lane_nodes=" << fastLaneNodes << endl;
-	cout << "SkipList_height=" << height << endl;
-	cout << "SkipList_distinct_words=" << distinctCount << endl;
-	cout << "SkipList_total_words=" << totalWords << endl;
-	cout << "SkipList_total_list_nodes=" << totalNodes << endl;
-	cout << "SkipList_key_comparisons=" << statKeyComparison << endl;
-	cout << "SkipList_pointer_changes=" << statPointerChange << endl;
+	// Output everything to the console CSV style
+	cout << "SKIPLIST STATISTICS:" << endl << endl;
+	cout << "Slow lane nodes," << distinctCount << endl;
+	cout << "fast lane nodes," << fastLaneNodes << endl;
+	cout << "Height," << height << endl;
+	cout << "Distinct words," << distinctCount << endl;
+	cout << "Total words," << totalWords << endl;
+	cout << "Total list nodes," << totalNodes << endl;
+	cout << "Key comparisons," << statKeyComparison << endl;
+	cout << "Pointer changes," << statPointerChange << endl;
+	cout << "Tossed coin," << statTossedCoin << endl;
+	cout << "Tossed heads," << statTossedHeads << endl;
 	for (int i = 0; i < height; i++) // List the no. of nodes in each level starting from level 1 (the top)...
 		// ...to level h (where h=height), each outputted on their own new line
 	{
 		int level = i + 1;
-		cout << "SkipList_nodes_lane_" << level << "=" << nodesInlevel[i] <<endl;
+		cout << "Nodes in lane " << level << "," << nodesInlevel[i] <<endl;
 	}
 }
 
+// Traverses iteratively through the list starting from the head at the top-most level, moving the p pointer right
+// as far as possible before moving down a level again.  Modifies the node count parameters based on the 
+// nodes found during traversal.
 void SkipList::traverse(int& distinctNodes, int& totalNodes, int& totalWords, int* nodesInLevel)
 {
 	SkipListNode* p = head;

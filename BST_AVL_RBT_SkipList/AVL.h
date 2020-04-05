@@ -1,3 +1,8 @@
+// AVL.h
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the definitions for the AVL class and its internal node structure
 #pragma once
 #include <string>
 

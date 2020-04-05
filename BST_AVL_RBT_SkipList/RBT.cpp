@@ -1,5 +1,11 @@
-#include <iostream>
+// RBT.cpp
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the implementation of the RBT class. Enables the Red-black tree to have words inserted and exposes the 
+// resulting statistics via DisplayStatistics.
 #include "RBT.h"
+#include <iostream>
 
 using namespace std;
 
@@ -90,26 +96,31 @@ void RBT::List()
 	cout << endl;
 }
 
+// Outputs the RBT's statistics in comma-separated values (CSV)
+// Gets the height via TreeHeight, node counts via Traverse, and every other metric
+// via class-wide variables.
 void RBT::DisplayStatistics()
 {
-	int height = TreeHeight();
+	int height = TreeHeight(); // get the tree height found by traversal
 	int distinctNodes = 0;
 	int totalNodes = 0;
 	if (root != NULL)
 		traverse(root, distinctNodes, totalNodes);
 
-	cout << "RBT_distinct_words=" << distinctNodes << endl;
-	cout << "RBT_total_words=" << totalNodes << endl;
-	cout << "RBT_height=" << height << endl;
-	cout << "RBT_key_comparisons=" << statKeyComparison << endl;
-	cout << "RBT_pointer_changes=" << statPointerChange << endl;
-	cout << "RBT_recolorings=" << statRecoloring << endl;
-	cout << "RBT_left_rotations=" << statleftRotation << endl;
-	cout << "RBT_right_rotations=" << statrightRotation << endl;
-	cout << "RBT_no_fixup_required=" << statnoFixup << endl;
-	cout << "RBT_case_1_problems=" << statCase1 << endl;
-	cout << "RBT_case_2_problems=" << statCase2 << endl;
-	cout << "RBT_case_3_problems=" << statCase3 << endl;
+	// Output everything to the console CSV style
+	cout << "RBT STATISTICS:" << endl << endl;
+	cout << "Distinct words," << distinctNodes << endl;
+	cout << "Total words," << totalNodes << endl;
+	cout << "Height," << height << endl;
+	cout << "Key comparisons," << statKeyComparison << endl;
+	cout << "Pointer changes," << statPointerChange << endl;
+	cout << "Recolorings," << statRecoloring << endl;
+	cout << "Left rotations," << statleftRotation << endl;
+	cout << "Right rotations," << statrightRotation << endl;
+	cout << "No fixup required," << statnoFixup << endl;
+	cout << "Case 1 problems," << statCase1 << endl;
+	cout << "Case 2 problems," << statCase2 << endl;
+	cout << "Case 3 problems," << statCase3 << endl;
 }
 
 // Outputs the height of the tree. Here the height is 0 for an empty tree, and 1 for
@@ -281,6 +292,7 @@ void RBT::right_rotate(node* x)
 }
 
 // A recursive in-order traversal (processes left subtree, then root, then right subtree)
+// Modifies the two node count parameters to what's found during traversal. 
 void RBT::traverse(node* p, int& distinctNodes, int& totalNodes)
 {
 	// If p has a left child, traverse the left subtree.

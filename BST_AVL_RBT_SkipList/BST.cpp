@@ -1,10 +1,11 @@
-#include "BST.h"
+// BST.cpp
 // Sebastian Hamel
-// EECS 2510 Non-Linear Data Structures
-// 02/23/2020
-
-#include <iostream>
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the implementation of the BST class. Enables the BST to have words inserted and exposes the 
+// resulting statistics via DisplayStatistics.
 #include "BST.h"
+#include <iostream>
 
 using namespace std;
 
@@ -13,30 +14,6 @@ using namespace std;
 BST::BST()
 {
 	root = NULL;
-}
-
-// The BST's destructor.  Called when the variable goes out of scope or is deleted
-// via the "delete" keyword.  Delete every node in the tree if the tree is not empty.
-BST::~BST()
-{
-	// If the tree has a root node (it is not empty), delete the root and every
-	// child and descendent of the root.  Otherwise, the root is empty, so do nothing.
-	if (root != NULL)
-	{
-		traverseDelete(root);
-	}
-}
-
-// Makes a post-order recursive traversal through the tree (processing the root after the children)
-// and deletes possible left child, right child, then root node recursively for every
-// node in the tree, from leaves to root.
-void BST::traverseDelete(node* p)
-{
-	if (p->LCH != NULL)
-		traverseDelete(p->LCH);
-	if (p->RCH != NULL)
-		traverseDelete(p->RCH);
-	delete p;
 }
 
 // Inserts a new value into the BST. If the value is already in the tree,
@@ -176,7 +153,7 @@ void BST::List()
 }
 
 // A recursive in-order traversal (processes left subtree, then root, then right subtree),
-// while adding 1 to the node count for every node
+// while adding 1 to the node count for every node and adding p.count to totalCount every time.
 void BST::traverse(node* p, int& distinctCount, int& totalCount)
 {
 	// If p has a left child, traverse the left subtree.
@@ -214,19 +191,24 @@ int BST::TreeHeight()
 	return count;
 }
 
+// Outputs the BST's statistics in comma-separated values (CSV)
+// Gets the height via TreeHeight, node counts via Traverse, and every other metric
+// via class-wide variables.
 void BST::DisplayStatistics()
 {
-	int height = TreeHeight();
-	int distinctNodes = 0;
+	int height = TreeHeight(); // get the tree height found by a traversal
+	int distinctNodes = 0; 
 	int totalNodes = 0;
 	if (root != NULL)
-		traverse(root, distinctNodes, totalNodes);
+		traverse(root, distinctNodes, totalNodes); // get the node counts from a traversal
 
-	cout << "BST_distinct_items=" << distinctNodes << endl;
-	cout << "BST_total_items=" << totalNodes << endl;
-	cout << "BST_height=" << height << endl;
-	cout << "BST_child_pointer_changes=" << statPointerChange << endl;
-	cout << "BST_key_comparisons=" << statKeyComparison << endl;
+	// Output everything to the console CSV style
+	cout << "BST Statistics: " << endl << endl;
+	cout << "Distinct words," << distinctNodes << endl;
+	cout << "Total words," << totalNodes << endl;
+	cout << "Height," << height << endl;
+	cout << "Child pointer changes," << statPointerChange << endl;
+	cout << "Key comparisons," << statKeyComparison << endl;
 	
 }
 

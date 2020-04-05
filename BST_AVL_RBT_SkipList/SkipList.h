@@ -1,3 +1,8 @@
+// SkipList.h
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the definitions for the SkipList class and its internal node structure
 #pragma once
 #include <random>
 
@@ -8,14 +13,15 @@ class SkipList
 public:
     SkipList();
 
-    void Insert(char X[50]);
+    void Insert(const char* word);
     void List();
     int getListHeight() { return h; };
     void DisplayStatistics();
 private:
     int statKeyComparison = 0;
     int statPointerChange = 0;
-    int debugSearchDepth = 0;
+    int statTossedHeads = 0;
+    int statTossedCoin = 0;
     mt19937 coin;
 
     const char* NEG_INF = "negInf";

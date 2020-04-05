@@ -1,8 +1,16 @@
+// AVL.cpp
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the implementation of the AVL class. Enables the AVL tree to have words inserted and exposes the 
+// resulting statistics via DisplayStatistics.
 #include "AVL.h"
 #include <iostream>
 
 using namespace std;
 
+// The AVL tree's constructor. Configures a new AVL tree where the root is null;
+// the tree is empty by default.
 AVL::AVL()
 {
 	root = NULL;
@@ -257,6 +265,7 @@ void AVL::traverse_list(node* p)
 }
 
 // A recursive in-order traversal (processes left subtree, then root, then right subtree)
+// Modifies the two node count parameters to what's found during traversal. 
 void AVL::traverse(node* p, int& distinctCount, int& totalCount)
 {
 	// If p has a left child, traverse the left subtree.
@@ -281,27 +290,32 @@ int AVL::TreeHeight()
 	return count;
 }
 
+// Outputs the AVL trees's statistics in comma-separated values (CSV)
+// Gets the height via TreeHeight, node counts via Traverse, and every other metric
+// via class-wide variables.
 void AVL::DisplayStatistics()
 {
-	int height = TreeHeight();
-	int distinctCount = 0;
+	int height = TreeHeight(); // get the tree height found by a traversal
+	int distinctCount = 0; 
 	int totalCount = 0;
 	if (root != NULL)
-		traverse(root, distinctCount, totalCount);
+		traverse(root, distinctCount, totalCount); // get the node counts from a traversal
 
-	cout << "AVL_distinct_words=" << distinctCount << endl;
-	cout << "AVL_total_words=" << totalCount << endl;
-	cout << "AVL_height=" << height << endl;
-	cout << "AVL_pointer_changes=" << statPointerChange << endl;
-	cout << "AVL_BF_changes=" << statBFChange << endl;
-	cout << "AVL_A_to_Y_BF_changes=" << statAtoYBFChange << endl;
-	cout << "AVL_A_to_Y_passes=" << statAtoYPass << endl;
-	cout << "AVL_key_comparisons=" << statKeyComparison << endl;
-	cout << "AVL_LL_rotations=" << statLL << endl;
-	cout << "AVL_LR_rotations=" << statLR << endl;
-	cout << "AVL_RR_rotations=" << statRR << endl;
-	cout << "AVL_RL_rotations=" << statRL << endl;
-	cout << "AVL_no_rotation_needed=" << statNoRotation << endl;
+	// Output everything to the console CSV style
+	cout << "AVL STATISTICS:" << endl << endl;
+	cout << "Distinct words," << distinctCount << endl;
+	cout << "Total words," << totalCount << endl;
+	cout << "Height," << height << endl;
+	cout << "Pointer changes," << statPointerChange << endl;
+	cout << "BF changes," << statBFChange << endl;
+	cout << "A to Y BF changes," << statAtoYBFChange << endl;
+	cout << "A to Y passes," << statAtoYPass << endl;
+	cout << "Key comparisons," << statKeyComparison << endl;
+	cout << "LL rotations," << statLL << endl;
+	cout << "LR rotations," << statLR << endl;
+	cout << "RR rotations," << statRR << endl;
+	cout << "RL rotations," << statRL << endl;
+	cout << "No rotation needed," << statNoRotation << endl;
 }
 
 // Recursively traverse through the tree, comparing the height of the left subtree against

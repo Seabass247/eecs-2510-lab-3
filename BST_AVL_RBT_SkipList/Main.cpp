@@ -1,3 +1,9 @@
+// Main.cpp
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// This is contains the entry point to the program.  Main parses the file specified by the constants at the top
+// or the file passed as an argument to the program. Resulting data for RBT, AVL, BST, and Skip List is outputted to the console.
 #include <iostream>
 #include "AVL.h"
 #include "BST.h"
@@ -6,8 +12,7 @@
 #include <fstream>
 #include <time.h>
 
-const string DIRECTORY = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\variety\\";
-
+const string DIRECTORY = "C:\\Users\\Sebastian\\Documents\\eecs2510lab3\\variety\\"; // Sets the directory that the file to be parsed is in.
 const string FILENAME = "Shakespeare.txt"; // The name of the file the parser will take input from.
 
 // Returns the execution time of an operation that begins at 'start'
@@ -19,6 +24,10 @@ double getExecutionTime(clock_t start, clock_t end)
 	return double(end - start) / double(CLOCKS_PER_SEC);
 }
 
+// Parses the file specified by the constants at the top, otherwise if an argument 
+// was passed to the program, parses the file as specified by the string value of said argument.
+// Resulting statistics for RBT, AVL, BST, and Skip List is outputted to the console after every word 
+// from the file has been inserted into the respective structures.
 void parse(string filename)
 {
 	char c;
@@ -34,7 +43,9 @@ void parse(string filename)
 	clock_t start, end;
 	
 	double overheadTime = 0;
-	cout << "INPUT_FILE=\"" << filename << "\"" << endl << endl;
+
+	cout << "INPUT_FILE,\"" << filename << "\"" << endl << endl; // Label the output data so the it will be associated with a specific file.
+
 	for (int pass = 0; pass < 6; pass++)
 	{
 		start = clock();
@@ -75,6 +86,7 @@ void parse(string filename)
 		// If the file doesn't end with a delimiter, it will leave the last word unprocessed.
 		// Insert once more, and display the statistics for this structure...
 		//
+		// Method "DisplayStatistics" outputs the data in CSV format so that the data can easily be transfered to Excel.
 		if (pass == 2) { if (strlen(chari)) RBT_T->Insert(chari); RBT_T->DisplayStatistics(); } // RBT
 		else if (pass == 3) { if (strlen(chari)) AVL_T->Insert(chari); AVL_T->DisplayStatistics(); } // AVL
 		else if (pass == 4) { if (strlen(chari)) BST_T->Insert(chari); BST_T->DisplayStatistics(); } // BST
@@ -84,13 +96,15 @@ void parse(string filename)
 			overheadTime = getExecutionTime(start, end);
 		else if (pass > 1)
 		{
-			cout << "Elapsed time: " << getExecutionTime(start, end) - overheadTime << " seconds" << endl;
+			cout << "Elapsed time (sec)," << getExecutionTime(start, end) - overheadTime << endl;
 			cout << endl;
 		}
 	}
 
 }
 
+// The entry point to the program. Parse the file specified in the program argument if it exists, otherwise
+// parse the file with the constants provided at the top of Main.
 int main(int argc, char* argv[])
 {
 	// Parse the file as supplied to the program as the first argument...

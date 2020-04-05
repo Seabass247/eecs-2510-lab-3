@@ -1,3 +1,8 @@
+// BST.h
+// Sebastian Hamel
+// EECS 2510, Spring 2020
+// 04/03/2020
+// Contains the definitions for the BST class and its internal node structure
 #pragma once
 #include <string>
 
@@ -7,7 +12,6 @@ class BST
 {
 public:
 	BST();
-	~BST();
 
 	void Insert(const char* word);
 	void List();
@@ -34,6 +38,5 @@ private:
 
 	void traverse(node* root, int& distinctCount, int& totalCount);
 	void traverse_list(node* p, string& list);
-	void traverseDelete(node* p);
 	int traverse_height(node* p);
 };

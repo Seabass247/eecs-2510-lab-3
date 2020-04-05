@@ -149,7 +149,7 @@
   <ItemGroup>
     <ClCompile Include="AVL.cpp" />
     <ClCompile Include="BST.cpp" />
-    <ClCompile Include="BST_AVL_RBT_SkipList.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="RBT.cpp" />
     <ClCompile Include="SkipList.cpp" />
   </ItemGroup>
